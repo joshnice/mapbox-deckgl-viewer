@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "./model-settings.css";
-import { useTestingResultValue } from "../hooks/use-testing-result";
+import { useAccumulativeTestingValue } from "../hooks/use-testing-result";
 import { useRenderingTimeValue } from "../hooks/use-rendering-time";
 import { useSubjectContext } from "../state/subject-context";
 import { useModelStats as useModelStatsValue } from "../hooks/use-model-stat";
@@ -30,7 +30,7 @@ export function ModelSettingsComponent({
 
 	const { $testing } = useSubjectContext();
 
-	const results = useTestingResultValue();
+	const results = useAccumulativeTestingValue();
 	const renderingTime = useRenderingTimeValue();
 	const stats = useModelStatsValue();
 	const testing = useTestingValue();
@@ -55,16 +55,16 @@ export function ModelSettingsComponent({
 		onTestingClicked(singleModelTest, singleModelTestAmount);
 	};
 
-	const getPerformanceClassName = () => {
-		if (results == null) {
+	const getPerformanceClassName = (result: number) => {
+		if (result == null) {
 			return "none";
 		}
 
-		if (results > 50) {
+		if (result > 50) {
 			return "good";
 		}
 
-		if (results > 30) {
+		if (result > 30) {
 			return "ok";
 		}
 
@@ -98,18 +98,26 @@ export function ModelSettingsComponent({
 						</div>
 					</>
 				)}
-				<div className={`model-setting-item ${getPerformanceClassName()}`}>
-					Performance: <span>{results ? `${results.toFixed(2)} fps` : "No result"}</span>
-				</div>
+				{!singleModelTest &&
+					<div className={`model-setting-item ${getPerformanceClassName(results["single"])}`}>
+						Performance: <span>{results["single"] ? `${results["single"].toFixed(2)} fps` : "No result"}</span>
+					</div>
+				}
 				{Object.entries(models).map(([id, modelFile]) => (
 					<div className="model-setting-item" key={id}>
 						<span className="model-name">{modelFile.name}</span>
-						<input
-							className="amount-input"
-							type="number"
-							value={amount[id] ?? 0}
-							onChange={({ target }) => handleAmountChanged(id, Number.parseInt(target.value))}
-						/>
+						{singleModelTest ?
+							<div className={`model-setting-item ${getPerformanceClassName(results[id])}`}>
+								<span>{results[id] ? `${results[id].toFixed(2)} fps` : "No result"}</span>
+							</div> 
+							: 
+							<input
+								className="amount-input"
+								type="number"
+								value={amount[id] ?? 0}
+								onChange={({ target }) => handleAmountChanged(id, Number.parseInt(target.value))}
+							/>
+						}
 					</div>
 				))}
 				{showStats && (

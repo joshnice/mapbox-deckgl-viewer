@@ -1,6 +1,5 @@
 export function createCSV(data: any[], headings: string[], fileName: string) {
     const csvData = [headings, ...data].join("\r");
-    console.log("csv data", csvData);
     downloadBlob(csvData, fileName);
 }
 

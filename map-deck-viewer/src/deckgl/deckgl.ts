@@ -89,7 +89,6 @@ export class DeckGl extends Base3d {
 
 		this.mapbox.getMap().addControl(this.mapboxOverlay);
 		await firstValueFrom(this.$renderingSceneFinished);
-		console.log("rendering finished");
 	}
 
 	public removeLayer() {

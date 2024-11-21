@@ -58,7 +58,7 @@ export class MapModelViewer {
 
 	public async startTesting(singleModelTest: boolean, modelAmount: number) {
 		if (!singleModelTest) {
-			this.mapbox.startTesting();
+			this.mapbox.startTesting("single");
 			return;
 		}
 
@@ -76,9 +76,9 @@ export class MapModelViewer {
 		this.removeModel();
 		await this.map3d?.addLayers({ [modelId]: modelFile });
 		this.changeModelAmount(modelId, modelAmount);
-		this.mapbox.startTesting();
+		this.mapbox.startTesting(modelId);
 		return new Promise<void>((resolve) => {
-			const sub = this.subjects.$testingResult.subscribe((result) => {
+			const sub = this.subjects.$testingResult.subscribe(({result}) => {
 				this.results[modelId] = Number.parseFloat(result.toFixed(2));
 				sub.unsubscribe();
 				resolve();
@@ -101,7 +101,7 @@ export class MapModelViewer {
 			$onModelFailedToLoad: $onModelFailedToLoad ?? new ReplaySubject<string>(),
 			$renderingSceneFinished: $renderingSceneFinished ?? new ReplaySubject<number>(),
 			$testing: $testing ?? new Subject<boolean>(),
-			$testingResult: $testingResult ?? new Subject<number>(),
+			$testingResult: $testingResult ?? new Subject<{ modelId: string, result: number }>(),
 			$onModelStatsFinished: $onModelStatsFinished ?? new ReplaySubject<Stats>()
 		};
 	}

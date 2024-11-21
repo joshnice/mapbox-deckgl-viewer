@@ -5,7 +5,7 @@ import { ReplaySubjectReset } from "../rxjs/replay-subject-reset";
 
 interface ISubjectContext {
     $testing: Subject<boolean>;
-    $testingResult: Subject<number>;
+    $testingResult: Subject<{ modelId: string, result: number }>;
     $renderingSceneFinished: ReplaySubject<number>;
     $modelStatsFinished: ReplaySubject<Stats>;
     $deckGlWarningLog: ReplaySubjectReset<string>;
@@ -14,7 +14,7 @@ interface ISubjectContext {
 
 export const SubjectContextInitialValue = {
     $testing: new Subject<boolean>(),
-    $testingResult: new Subject<number>(),
+    $testingResult: new Subject<{ modelId: string, result: number }>(),
     $renderingSceneFinished: new ReplaySubject<number>(),
     $modelStatsFinished: new ReplaySubject<Stats>(),
     $deckGlWarningLog: new ReplaySubjectReset<string>(),

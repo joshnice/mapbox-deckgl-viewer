@@ -7,7 +7,7 @@ export class Mapbox {
 
 	private readonly $testing: Subject<boolean>;
 
-	private readonly $testingResult: Subject<number>;
+	private readonly $testingResult: Subject<{modelId: string, result: number}>;
 
 	private fps = new FpsCounter();
 
@@ -18,7 +18,7 @@ export class Mapbox {
 		bearing: 0,
 	};
 
-	constructor(options: { container: HTMLDivElement; subjects: { $testing: Subject<boolean>, $testingResult: Subject<number> } }) {
+	constructor(options: { container: HTMLDivElement; subjects: { $testing: Subject<boolean>, $testingResult: Subject<{modelId: string, result: number}> } }) {
 		this.createMap(options.container);
 		this.$testing = options.subjects.$testing;
 		this.$testingResult = options.subjects.$testingResult;
@@ -51,7 +51,7 @@ export class Mapbox {
 		return this.map;
 	}
 
-	public async startTesting() {
+	public async startTesting(modelId: string) {
 		this.disableInteraction();
 		this.map?.flyTo({
 			bearing: this.startPosition.bearing,
@@ -75,7 +75,7 @@ export class Mapbox {
 		}
 		this.$testing.next(false);
 		const results = this.fps.finish();
-		this.$testingResult.next(results);
+		this.$testingResult.next({ result: results, modelId });
 		this.enableInteraction();
 	}
 
