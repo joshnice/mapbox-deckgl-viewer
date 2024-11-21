@@ -86,32 +86,27 @@ export default function Map() {
 	};
 
 	return (
-		<>
+		<div className="map-container">
+			<div ref={renderMap} className="map">	
+				<button type="button" className="github-button">
+					<img className="github-logo" onClick={handleGithubClick} src={githubLogo} alt="github logo" />
+				</button>
+				{!showModelUpload && (<WarningConsoleComponent $deckglWarningLog={$deckglWarningLog.current} $deckglFailedToLoadModel={$deckglFailedToLoadModel.current} />)}
+			</div>
 			{showModelUpload && <ModelInputComponent onModelInput={handleModelInput} />}
-			{!showModelUpload && (
-				<>
-					<ModelSettingsComponent
-						$renderingSceneFinshed={$renderingSceneFinshedRef.current}
-						$testingResult={$testingResultRef.current}
-						$modelStatsFinshed={$modelStatsFinshedRef.current}
-						showStats={showStats}
-						models={models}
-						zoomLevel={zoomLevel}
-						onAmountChange={handleModelAmountChanged}
-						onTestingClicked={handleTestingClicked}
-						onChangeModelClick={handleResetModelClicked}
-						onZoomLevelChange={handleZoomLevelChange}
-					/>
-					<WarningConsoleComponent
-						$deckglWarningLog={$deckglWarningLog.current}
-						$deckglFailedToLoadModel={$deckglFailedToLoadModel.current}
-					/>
-				</>
-			)}
-			<div ref={renderMap} className="map-container" />
-			<button className="github-button">
-				<img className="github-logo" onClick={handleGithubClick} src={githubLogo} alt="github logo" />
-			</button>
-		</>
+				<ModelSettingsComponent
+					$renderingSceneFinshed={$renderingSceneFinshedRef.current}
+					$testingResult={$testingResultRef.current}
+					$modelStatsFinshed={$modelStatsFinshedRef.current}
+					showStats={showStats}
+					models={models}
+					zoomLevel={zoomLevel}
+					showOptions={!showModelUpload}
+					onAmountChange={handleModelAmountChanged}
+					onTestingClicked={handleTestingClicked}
+					onChangeModelClick={handleResetModelClicked}
+					onZoomLevelChange={handleZoomLevelChange}
+				/>
+		</div>
 	);
 }

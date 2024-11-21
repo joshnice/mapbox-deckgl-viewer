@@ -11,6 +11,7 @@ interface ModelSettingsProps {
 	showStats: boolean;
 	models: Record<string, File>;
 	zoomLevel: number;
+	showOptions: boolean;
 	onAmountChange: (id: string, amount: number) => void;
 	onTestingClicked: (singleModelTest: boolean, amount: number) => void;
 	onChangeModelClick: () => void;
@@ -24,6 +25,7 @@ export function ModelSettingsComponent({
 	showStats,
 	models,
 	zoomLevel,
+	showOptions,
 	onAmountChange,
 	onTestingClicked,
 	onChangeModelClick,
@@ -34,9 +36,13 @@ export function ModelSettingsComponent({
 	const [stats, setStats] = useState<Stats | null>(null);
 
 	const [singleModelTest, setSingleModelTest] = useState(false);
-	const [singleModelTestAmount, setSingleModelTestAmount] = useState<number>(0);
+	const [singleModelTestAmount, setSingleModelTestAmount] = useState<number>(1);
 	const [testing, setTesting] = useState(false);
-	const [amount, setAmount] = useState<Record<string, number>>(createStartingAmount(models));
+	const [amount, setAmount] = useState<Record<string, number>>({});
+
+	useEffect(() => {
+		setAmount(createStartingAmount(models));
+	}, [models]);
 
 	useEffect(() => {
 		const testingResultSub = $testingResult.subscribe((result) => {
@@ -105,7 +111,7 @@ export function ModelSettingsComponent({
 	return (
 		<div className="model-settings">
 			<h2>Model settings</h2>
-			<div className="model-setting-items">
+			{showOptions && <div className="model-setting-items">
 				{showStats && (
 					<>
 						<div className={`model-setting-item ${getRenderingTimeClassName()}`}>
@@ -118,7 +124,7 @@ export function ModelSettingsComponent({
 				</div>
 				{Object.entries(models).map(([id, modelFile]) => (
 					<div className="model-setting-item" key={id}>
-						{modelFile.name} Amount
+						<span className="model-name">{modelFile.name}</span>
 						<input
 							className="amount-input"
 							type="number"
@@ -160,14 +166,14 @@ export function ModelSettingsComponent({
 					/>
 				</div>
 				<div className="model-setting-item testing-button">
-					<button disabled={testing} onClick={handleTestingClicked}>
+					<button disabled={testing || singleModelTest && singleModelTestAmount === 0} onClick={handleTestingClicked}>
 						Start Testing
 					</button>
 					<button disabled={testing} onClick={onChangeModelClick}>
 						Change Model
 					</button>
 				</div>
-			</div>
+			</div>}
 		</div>
 	);
 }

@@ -83,6 +83,17 @@ export class Mapbox {
 		this.startPosition.zoom = zoomLevel;
 	}
 
+	public resetPosition() {
+		this.map?.flyTo({
+			bearing: this.startPosition.bearing,
+			center: this.startPosition.center,
+			zoom: this.startPosition.zoom,
+			pitch: this.startPosition.pitch,
+			duration: 0,
+			essential: true,
+		});
+	}
+
 	private enableInteraction() {
 		this.map?.dragPan.enable();
 		this.map?.dragRotate.enable();
