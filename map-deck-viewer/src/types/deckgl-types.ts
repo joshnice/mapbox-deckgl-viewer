@@ -6,7 +6,7 @@ export type DeckGlSubjects = {
 	$onLumaGlWarning: ReplaySubject<string>;
 	$onModelFailedToLoad: ReplaySubject<string>;
 	$onModelStatsFinished: ReplaySubject<Stats>;
-	$renderingSceneFinshed: ReplaySubject<number>;
+	$renderingSceneFinished: ReplaySubject<number>;
 };
 
 export interface Stats {

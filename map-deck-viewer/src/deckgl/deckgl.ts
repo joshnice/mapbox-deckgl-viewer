@@ -16,7 +16,7 @@ export class DeckGl extends Base3d {
 
 	private readonly $onModelFailedToLoad: DeckGlSubjects["$onModelFailedToLoad"];
 
-	private readonly $renderingSceneFinished: DeckGlSubjects["$renderingSceneFinshed"];
+	private readonly $renderingSceneFinished: DeckGlSubjects["$renderingSceneFinished"];
 
 	private readonly $onModelStatsFinished: DeckGlSubjects["$onModelStatsFinished"];
 
@@ -29,7 +29,7 @@ export class DeckGl extends Base3d {
 	constructor(options: { mapbox: Mapbox; subjects: DeckGlSubjects }) {
 		super(options);
 		this.$onModelFailedToLoad = options.subjects.$onModelFailedToLoad;
-		this.$renderingSceneFinished = options.subjects.$renderingSceneFinshed;
+		this.$renderingSceneFinished = options.subjects.$renderingSceneFinished;
 		this.$onModelStatsFinished = options.subjects.$onModelStatsFinished;
 		this.events(options.subjects);
 	}

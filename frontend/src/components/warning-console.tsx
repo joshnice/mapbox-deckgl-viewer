@@ -1,17 +1,15 @@
 import "./warning-console.css";
 import { useEffect, useState } from "react";
-import { ReplaySubjectReset } from "../rxjs/replay-subject-reset";
+import { useSubjectContext } from "../state/subject-context";
 
-interface WarningConsoleProps {
-	$deckglWarningLog: ReplaySubjectReset<string>;
-	$deckglFailedToLoadModel: ReplaySubjectReset<string>;
-}
 
-export function WarningConsoleComponent({ $deckglWarningLog, $deckglFailedToLoadModel }: WarningConsoleProps) {
+export function WarningConsoleComponent() {
 	const [messages, setMessages] = useState<{ message: string; type: "error" | "warning" }[]>([]);
 
+	const { $deckGlFailedToLoadModel, $deckGlWarningLog} = useSubjectContext()
+	
 	useEffect(() => {
-		const warningSubscription = $deckglWarningLog.subscribe((warning) => {
+		const warningSubscription = $deckGlWarningLog.subscribe((warning) => {
 			setMessages((latestMessages) =>
 				latestMessages.some((m) => m.message === warning)
 					? latestMessages
@@ -19,7 +17,7 @@ export function WarningConsoleComponent({ $deckglWarningLog, $deckglFailedToLoad
 			);
 		});
 
-		const errorSubscription = $deckglFailedToLoadModel.subscribe((error) => {
+		const errorSubscription = $deckGlFailedToLoadModel.subscribe((error) => {
 			setMessages((latestMessages) =>
 				latestMessages.some((m) => m.message === error)
 					? latestMessages

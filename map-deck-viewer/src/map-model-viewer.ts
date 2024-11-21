@@ -95,11 +95,11 @@ export class MapModelViewer {
 	}
 
 	private verifySubjects(subjects: MapDeckViewOptions["subjects"] = {}) {
-		const { $onLumaGlWarning, $onModelFailedToLoad, $renderingSceneFinshed, $testing, $testingResult, $onModelStatsFinished } = subjects;
+		const { $onLumaGlWarning, $onModelFailedToLoad, $renderingSceneFinished, $testing, $testingResult, $onModelStatsFinished } = subjects;
 		return {
 			$onLumaGlWarning: $onLumaGlWarning ?? new ReplaySubject<string>(),
 			$onModelFailedToLoad: $onModelFailedToLoad ?? new ReplaySubject<string>(),
-			$renderingSceneFinshed: $renderingSceneFinshed ?? new ReplaySubject<number>(),
+			$renderingSceneFinished: $renderingSceneFinished ?? new ReplaySubject<number>(),
 			$testing: $testing ?? new Subject<boolean>(),
 			$testingResult: $testingResult ?? new Subject<number>(),
 			$onModelStatsFinished: $onModelStatsFinished ?? new ReplaySubject<Stats>()
