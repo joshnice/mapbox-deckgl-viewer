@@ -12,7 +12,7 @@
 
     color: white;
     font-family: Lato;
-    
+
     padding: 20px;
     background-color:#424549;
     border-radius: 4px 0px 0px 4px;
@@ -79,4 +79,8 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+}
+
+.change-model-button {
+    width: 100%;
 }

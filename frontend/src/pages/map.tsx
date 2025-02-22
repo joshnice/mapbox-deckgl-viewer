@@ -13,8 +13,15 @@ const MAPBOX_ACCESS_TOKEN =
 	"pk.eyJ1Ijoiam9zaG5pY2U5OCIsImEiOiJjanlrMnYwd2IwOWMwM29vcnQ2aWIwamw2In0.RRsdQF3s2hQ6qK-7BH5cKg";
 
 export default function Map() {
-
-	const { $testing, $deckGlFailedToLoadModel, $deckGlWarningLog, $modelStatsFinished, $renderingSceneFinished, $testingResult } = useSubjectContext()
+	const {
+		$testing,
+		$deckGlFailedToLoadModel,
+		$deckGlWarningLog,
+		$modelStatsFinished,
+		$renderingSceneFinished,
+		$testingResult,
+		$validationTesting,
+	} = useSubjectContext();
 
 	const viewer = useRef<MapModelViewer | null>(null);
 	const [showModelUpload, setShowModalUpload] = useState(true);
@@ -36,6 +43,10 @@ export default function Map() {
 
 	const handleTestingClicked = (singleModelTest: boolean, amount: number) => {
 		viewer.current?.startTesting(singleModelTest, amount);
+	};
+
+	const handleValidationTestingClicked = () => {
+		viewer.current?.startValidtionTesting();
 	};
 
 	const handleResetModelClicked = () => {
@@ -72,6 +83,7 @@ export default function Map() {
 					$onModelFailedToLoad: $deckGlFailedToLoadModel,
 					$renderingSceneFinished: $renderingSceneFinished,
 					$onModelStatsFinished: $modelStatsFinished,
+					$validationTesting: $validationTesting,
 				},
 			});
 		}
@@ -79,23 +91,24 @@ export default function Map() {
 
 	return (
 		<div className="map-container">
-			<div ref={renderMap} className="map">	
+			<div ref={renderMap} className="map">
 				<button type="button" className="github-button">
 					<img className="github-logo" onClick={handleGithubClick} src={githubLogo} alt="github logo" />
 				</button>
-				{!showModelUpload && (<WarningConsoleComponent />)}
+				{!showModelUpload && <WarningConsoleComponent />}
 			</div>
 			{showModelUpload && <ModelInputComponent onModelInput={handleModelInput} />}
-				<ModelSettingsComponent
-					showStats={showStats}
-					models={models}
-					zoomLevel={zoomLevel}
-					showOptions={!showModelUpload}
-					onAmountChange={handleModelAmountChanged}
-					onTestingClicked={handleTestingClicked}
-					onChangeModelClick={handleResetModelClicked}
-					onZoomLevelChange={handleZoomLevelChange}
-				/>
+			<ModelSettingsComponent
+				showStats={showStats}
+				models={models}
+				zoomLevel={zoomLevel}
+				showOptions={!showModelUpload}
+				onAmountChange={handleModelAmountChanged}
+				onTestingClicked={handleTestingClicked}
+				onChangeModelClick={handleResetModelClicked}
+				onZoomLevelChange={handleZoomLevelChange}
+				onValidationTestingClicked={handleValidationTestingClicked}
+			/>
 		</div>
 	);
 }

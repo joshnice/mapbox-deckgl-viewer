@@ -19,6 +19,8 @@ export class MapModelViewer {
 
 	private results: Record<string, number> = {};
 
+	private validationResults: Record<string, number> = {};
+
 	constructor(options: MapDeckViewOptions) {
 		if (options.mapboxAccessKey == null) {
 			throw new Error("Mapbox access key needs to be present");
@@ -33,7 +35,6 @@ export class MapModelViewer {
 		this.subjects = this.verifySubjects(options.subjects);
 
 		this.mapbox = new Mapbox({ container: options.mapElement, subjects: this.subjects });
-
 	}
 
 	public setEngine(engine: EngineType) {
@@ -44,7 +45,6 @@ export class MapModelViewer {
 		if (engine === "mapbox") {
 			this.map3d = new Mapbox3d({ mapbox: this.mapbox, subjects: this.subjects });
 		}
-
 	}
 
 	public async addModels(models: Record<string, File>) {
@@ -68,9 +68,13 @@ export class MapModelViewer {
 			await this.testSingleModel(modelAmount, modelId, modelFile);
 		}
 
-		createCSV(Object.entries(this.results), ["model name", "avg fps"], "Model testing results")
+		createCSV(Object.entries(this.results), ["model name", "avg fps"], "Model testing results");
 	}
 
+	public async startValidtionTesting() {
+		this.validationResults = {};
+		this.map3d?.validationTesting(this.models);
+	}
 
 	private async testSingleModel(modelAmount: number, modelId: string, modelFile: File) {
 		this.removeModel();
@@ -78,7 +82,7 @@ export class MapModelViewer {
 		this.changeModelAmount(modelId, modelAmount);
 		this.mapbox.startTesting(modelId);
 		return new Promise<void>((resolve) => {
-			const sub = this.subjects.$testingResult.subscribe(({result}) => {
+			const sub = this.subjects.$testingResult.subscribe(({ result }) => {
 				this.results[modelId] = Number.parseFloat(result.toFixed(2));
 				sub.unsubscribe();
 				resolve();
@@ -95,14 +99,23 @@ export class MapModelViewer {
 	}
 
 	private verifySubjects(subjects: MapDeckViewOptions["subjects"] = {}) {
-		const { $onLumaGlWarning, $onModelFailedToLoad, $renderingSceneFinished, $testing, $testingResult, $onModelStatsFinished } = subjects;
+		const {
+			$onLumaGlWarning,
+			$onModelFailedToLoad,
+			$renderingSceneFinished,
+			$testing,
+			$testingResult,
+			$onModelStatsFinished,
+			$validationTesting,
+		} = subjects;
 		return {
 			$onLumaGlWarning: $onLumaGlWarning ?? new ReplaySubject<string>(),
 			$onModelFailedToLoad: $onModelFailedToLoad ?? new ReplaySubject<string>(),
 			$renderingSceneFinished: $renderingSceneFinished ?? new ReplaySubject<number>(),
 			$testing: $testing ?? new Subject<boolean>(),
-			$testingResult: $testingResult ?? new Subject<{ modelId: string, result: number }>(),
-			$onModelStatsFinished: $onModelStatsFinished ?? new ReplaySubject<Stats>()
+			$testingResult: $testingResult ?? new Subject<{ modelId: string; result: number }>(),
+			$onModelStatsFinished: $onModelStatsFinished ?? new ReplaySubject<Stats>(),
+			$validationTesting: $validationTesting ?? new Subject<boolean>(),
 		};
 	}
 }

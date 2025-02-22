@@ -87,6 +87,7 @@ export class DeckGl extends Base3d {
 			layers: this.modelLayers,
 		});
 
+		// @ts-ignore
 		this.mapbox.getMap().addControl(this.mapboxOverlay);
 		await firstValueFrom(this.$renderingSceneFinished);
 	}
@@ -101,6 +102,7 @@ export class DeckGl extends Base3d {
 
 			this.mapboxOverlay.finalize();
 
+			// @ts-ignore
 			this.mapbox.getMap().removeControl(this.mapboxOverlay);
 
 			this.stats = null;
@@ -117,7 +119,9 @@ export class DeckGl extends Base3d {
 		const layers: ScenegraphLayer[] = [];
 
 		Object.entries(this.modelsAmount).forEach(([modelId, modelAmount]) => {
-			const data: { coords: [number, number] }[] = allCoords.slice(totalAmountCoordsUsed, totalAmountCoordsUsed + modelAmount).map((coords) => ({ coords }))
+			const data: { coords: [number, number] }[] = allCoords
+				.slice(totalAmountCoordsUsed, totalAmountCoordsUsed + modelAmount)
+				.map((coords) => ({ coords }));
 			totalAmountCoordsUsed += modelAmount;
 			layers.push(this.createModelLayer(modelId, data));
 		});
@@ -129,6 +133,10 @@ export class DeckGl extends Base3d {
 		} catch (err) {
 			console.error("err", err);
 		}
+	}
+
+	public override validationTesting(): void {
+		throw new Error("Method not implemented.");
 	}
 
 	private createModelLayer(id: string, data: { coords: [number, number] }[]) {
@@ -165,7 +173,7 @@ export class DeckGl extends Base3d {
 			material: model.json.materials.length,
 			mesh: model.json.meshes.length,
 			nodes: model.json.nodes.length,
-		}
+		};
 		this.$onModelStatsFinished.next(this.stats);
 	}
 }

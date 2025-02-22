@@ -1,5 +1,6 @@
 import type { FeatureCollection, Feature, Point } from "geojson";
 import { Base3d } from "../base3d/base3d";
+import type { ModelLayerSpecification } from "mapbox-gl";
 
 export class Mapbox3d extends Base3d {
 	public override addLayers(models: Record<string, File>): Promise<void> {
@@ -37,7 +38,7 @@ export class Mapbox3d extends Base3d {
 
 			map.addSource(modelId, { type: "geojson", data: source });
 
-			const modelLayer = {
+			const modelLayer: ModelLayerSpecification = {
 				id: modelId,
 				type: "model",
 				layout: {
@@ -46,7 +47,6 @@ export class Mapbox3d extends Base3d {
 				source: modelId,
 			};
 
-			// @ts-ignore
 			map.addLayer(modelLayer);
 		}
 
@@ -88,5 +88,47 @@ export class Mapbox3d extends Base3d {
 				source.setData(updatedData);
 			}
 		});
+	}
+
+	public override async validationTesting(models: Record<string, File>): Promise<void> {
+		this.removeLayer();
+
+		const map = this.mapbox.getMap();
+
+		const source: FeatureCollection = {
+			type: "FeatureCollection",
+			features: [{ type: "Feature", geometry: { type: "Point", coordinates: [0, 0] }, properties: {} }],
+		};
+
+		for (const [modelId, file] of Object.entries(models)) {
+			try {
+				map.addSource(modelId, { type: "geojson", data: source });
+				map.addModel(modelId, URL.createObjectURL(file));
+				map.addLayer({
+					id: modelId,
+					type: "model",
+					source: modelId,
+					layout: {
+						"model-id": modelId,
+					},
+				});
+
+				await new Promise<void>((res) => {
+					map.once("idle", () => {
+						const features = map.queryRenderedFeatures();
+						console.log(features);
+						res();
+					});
+				});
+			} catch (err) {
+				console.error(err);
+			}
+			if (map.getLayer(modelId)) {
+				map.removeLayer(modelId);
+			}
+			if (map.getSource(modelId)) {
+				map.removeSource(modelId);
+			}
+		}
 	}
 }

@@ -7,7 +7,7 @@ export class Mapbox {
 
 	private readonly $testing: Subject<boolean>;
 
-	private readonly $testingResult: Subject<{modelId: string, result: number}>;
+	private readonly $testingResult: Subject<{ modelId: string; result: number }>;
 
 	private fps = new FpsCounter();
 
@@ -18,7 +18,10 @@ export class Mapbox {
 		bearing: 0,
 	};
 
-	constructor(options: { container: HTMLDivElement; subjects: { $testing: Subject<boolean>, $testingResult: Subject<{modelId: string, result: number}> } }) {
+	constructor(options: {
+		container: HTMLDivElement;
+		subjects: { $testing: Subject<boolean>; $testingResult: Subject<{ modelId: string; result: number }> };
+	}) {
 		this.createMap(options.container);
 		this.$testing = options.subjects.$testing;
 		this.$testingResult = options.subjects.$testingResult;
@@ -41,6 +44,19 @@ export class Mapbox {
 			interactive: false,
 		});
 		this.enableInteraction();
+
+		this.map.once("idle", () => {
+			this.map?.addSource("point", {
+				type: "geojson",
+				data: { type: "Feature", properties: {}, geometry: { coordinates: [0, 0], type: "Point" } },
+			});
+			this.map?.addLayer({ id: "point", type: "circle", source: "point" });
+		});
+
+		this.map.on("click", (e) => {
+			const f = this.map?.queryRenderedFeatures();
+			console.log("f", f);
+		});
 	}
 
 	public getMap() {
@@ -63,7 +79,6 @@ export class Mapbox {
 		});
 		this.$testing.next(true);
 		this.fps.start();
-
 
 		for (let bearing = 0; bearing < 361; bearing += 10) {
 			this.map?.flyTo({ bearing, duration: 300, essential: true });
@@ -99,7 +114,6 @@ export class Mapbox {
 		this.map?.dragRotate.enable();
 		this.map?.scrollZoom.enable();
 		this.map?.keyboard.enable();
-
 	}
 
 	private disableInteraction() {
