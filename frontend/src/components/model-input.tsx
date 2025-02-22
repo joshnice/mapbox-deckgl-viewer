@@ -9,7 +9,7 @@ interface ModelInputProps {
 export function ModelInputComponent({ onModelInput }: ModelInputProps) {
 	const inputRef = useRef<HTMLInputElement>(null);
 	const [loading, setLoading] = useState(false);
-	const [engine, setEngine] = useState<EngineType>("deckgl");
+	const [engine, setEngine] = useState<EngineType>("mapbox");
 
 	const onFileInputted = (event: ChangeEvent<HTMLInputElement>) => {
 		setLoading(true);

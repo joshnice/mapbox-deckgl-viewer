@@ -13,7 +13,7 @@
 	"dependencies": {
 		"@deck.gl/mapbox": "^9.0.7",
 		"deck.gl": "^9.0.7",
-		"mapbox-gl": "^3.3.0",
+		"mapbox-gl": "^3.10.0",
 		"rxjs": "^7.8.1",
 		"uuid": "^9.0.1"
 	},
