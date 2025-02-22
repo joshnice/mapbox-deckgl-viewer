@@ -53,7 +53,7 @@ export class Mapbox {
 			this.map?.addLayer({ id: "point", type: "circle", source: "point" });
 		});
 
-		this.map.on("click", (e) => {
+		this.map.on("click", () => {
 			const f = this.map?.queryRenderedFeatures();
 			console.log("f", f);
 		});

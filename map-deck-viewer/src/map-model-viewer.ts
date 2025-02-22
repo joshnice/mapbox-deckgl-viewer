@@ -19,7 +19,7 @@ export class MapModelViewer {
 
 	private results: Record<string, number> = {};
 
-	private validationResults: Record<string, number> = {};
+	// private validationResults: Record<string, number> = {};
 
 	constructor(options: MapDeckViewOptions) {
 		if (options.mapboxAccessKey == null) {
