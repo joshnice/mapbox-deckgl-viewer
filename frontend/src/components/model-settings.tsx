@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
-import { ReplaySubject, Subject } from "rxjs";
-import { Stats } from "@joshnice/map-deck-viewer";
-import { ReplaySubjectReset } from "../rxjs/replay-subject-reset";
 import "./model-settings.css";
+import { useAccumulativeTestingValue } from "../hooks/use-testing-result";
+import { useRenderingTimeValue } from "../hooks/use-rendering-time";
+import { useSubjectContext } from "../state/subject-context";
+import { useModelStats as useModelStatsValue } from "../hooks/use-model-stat";
+import { useTestingValue } from "../hooks/use-testing";
 
 interface ModelSettingsProps {
-	$testingResult: Subject<number>;
-	$renderingSceneFinshed: ReplaySubjectReset<number>;
-	$modelStatsFinshed: ReplaySubject<Stats>;
 	showStats: boolean;
 	models: Record<string, File>;
 	zoomLevel: number;
+	showOptions: boolean;
 	onAmountChange: (id: string, amount: number) => void;
 	onTestingClicked: (singleModelTest: boolean, amount: number) => void;
 	onChangeModelClick: () => void;
@@ -18,46 +18,31 @@ interface ModelSettingsProps {
 }
 
 export function ModelSettingsComponent({
-	$testingResult,
-	$renderingSceneFinshed,
-	$modelStatsFinshed,
 	showStats,
 	models,
 	zoomLevel,
+	showOptions,
 	onAmountChange,
 	onTestingClicked,
 	onChangeModelClick,
 	onZoomLevelChange,
 }: ModelSettingsProps) {
-	const [results, setResults] = useState<number | null>(null);
-	const [renderingTime, setRenderingTime] = useState<number | null>(null);
-	const [stats, setStats] = useState<Stats | null>(null);
+
+	const { $testing } = useSubjectContext();
+
+	const results = useAccumulativeTestingValue();
+	const renderingTime = useRenderingTimeValue();
+	const stats = useModelStatsValue();
+	const testing = useTestingValue();
 
 	const [singleModelTest, setSingleModelTest] = useState(false);
-	const [singleModelTestAmount, setSingleModelTestAmount] = useState<number>(0);
-	const [testing, setTesting] = useState(false);
-	const [amount, setAmount] = useState<Record<string, number>>(createStartingAmount(models));
+	const [singleModelTestAmount, setSingleModelTestAmount] = useState<number>(1);
+	const [amount, setAmount] = useState<Record<string, number>>({});
 
 	useEffect(() => {
-		const testingResultSub = $testingResult.subscribe((result) => {
-			setResults(result);
-			setTesting(false);
-		});
+		setAmount(createStartingAmount(models));
+	}, [models]);
 
-		const renderingSceneFinshedSub = $renderingSceneFinshed.subscribe((result) => {
-			setRenderingTime(result);
-		});
-
-		const modelStatsFinshedSub = $modelStatsFinshed.subscribe((stats) => {
-			setStats(stats);
-		});
-
-		return () => {
-			testingResultSub.unsubscribe();
-			renderingSceneFinshedSub.unsubscribe();
-			modelStatsFinshedSub.unsubscribe();
-		};
-	}, []);
 
 	const handleAmountChanged = (id: string, newAmount: number) => {
 		const parsedAmount = Number.isNaN(newAmount) ? 0 : newAmount;
@@ -66,20 +51,20 @@ export function ModelSettingsComponent({
 	};
 
 	const handleTestingClicked = () => {
-		setTesting(true);
+		$testing.next(true);
 		onTestingClicked(singleModelTest, singleModelTestAmount);
 	};
 
-	const getPerformanceClassName = () => {
-		if (results == null) {
+	const getPerformanceClassName = (result: number) => {
+		if (result == null) {
 			return "none";
 		}
 
-		if (results > 50) {
+		if (result > 50) {
 			return "good";
 		}
 
-		if (results > 30) {
+		if (result > 30) {
 			return "ok";
 		}
 
@@ -105,7 +90,7 @@ export function ModelSettingsComponent({
 	return (
 		<div className="model-settings">
 			<h2>Model settings</h2>
-			<div className="model-setting-items">
+			{showOptions && <div className="model-setting-items">
 				{showStats && (
 					<>
 						<div className={`model-setting-item ${getRenderingTimeClassName()}`}>
@@ -113,18 +98,26 @@ export function ModelSettingsComponent({
 						</div>
 					</>
 				)}
-				<div className={`model-setting-item ${getPerformanceClassName()}`}>
-					Performance: <span>{results ? `${results.toFixed(2)} fps` : "No result"}</span>
-				</div>
+				{!singleModelTest &&
+					<div className={`model-setting-item ${getPerformanceClassName(results["single"])}`}>
+						Performance: <span>{results["single"] ? `${results["single"].toFixed(2)} fps` : "No result"}</span>
+					</div>
+				}
 				{Object.entries(models).map(([id, modelFile]) => (
 					<div className="model-setting-item" key={id}>
-						{modelFile.name} Amount
-						<input
-							className="amount-input"
-							type="number"
-							value={amount[id]}
-							onChange={({ target }) => handleAmountChanged(id, Number.parseInt(target.value))}
-						/>
+						<span className="model-name">{modelFile.name}</span>
+						{singleModelTest ?
+							<div className={`model-setting-item ${getPerformanceClassName(results[id])}`}>
+								<span>{results[id] ? `${results[id].toFixed(2)} fps` : "No result"}</span>
+							</div> 
+							: 
+							<input
+								className="amount-input"
+								type="number"
+								value={amount[id] ?? 0}
+								onChange={({ target }) => handleAmountChanged(id, Number.parseInt(target.value))}
+							/>
+						}
 					</div>
 				))}
 				{showStats && (
@@ -160,14 +153,14 @@ export function ModelSettingsComponent({
 					/>
 				</div>
 				<div className="model-setting-item testing-button">
-					<button disabled={testing} onClick={handleTestingClicked}>
+					<button disabled={testing || singleModelTest && singleModelTestAmount === 0} onClick={handleTestingClicked}>
 						Start Testing
 					</button>
-					<button disabled={testing} onClick={onChangeModelClick}>
+					<button disabled={testing ?? false} onClick={onChangeModelClick}>
 						Change Model
 					</button>
 				</div>
-			</div>
+			</div>}
 		</div>
 	);
 }

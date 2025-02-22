@@ -1,18 +1,14 @@
 .model-settings {
-    position: absolute;
-    top: 0px;
-    right: 0px;
-
+    box-sizing: content-box;
     display: flex;
     flex-direction: column;
     gap: 25px;
 
-    height: fit-content;
-    width: 260px;
+    width: 300px;
     z-index: 10;
-    max-height: 600px;
 
-    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
 
     color: white;
     font-family: Lato;
@@ -28,6 +24,14 @@
     align-items: center;
     gap: 15px;
     font-size: 20px;
+    width: 100%;
+}
+
+.model-name {
+    max-width: 50%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .amount-input {

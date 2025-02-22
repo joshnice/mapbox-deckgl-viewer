@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import Map from "./pages/map.tsx";
 import "./main.css";
 import "./font.css";
+import { SubjectContext, SubjectContextInitialValue } from "./state/subject-context.ts";
 
 const root = document.getElementById("root");
 
@@ -12,6 +13,8 @@ if (root == null) {
 
 ReactDOM.createRoot(root).render(
 	<React.StrictMode>
-		<Map />
+		<SubjectContext.Provider value={SubjectContextInitialValue}>
+			<Map />
+		</SubjectContext.Provider>
 	</React.StrictMode>,
 );

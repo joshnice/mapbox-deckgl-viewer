@@ -5,7 +5,7 @@ export type MapDeckViewerSubjects = DeckGlSubjects;
 export const mapDeckViewerSubjectsNames: (keyof MapDeckViewerSubjects)[] = [
 	"$onLumaGlWarning",
 	"$onModelFailedToLoad",
-	"$renderingSceneFinshed",
+	"$renderingSceneFinished",
 	"$testing",
 	"$testingResult",
 	"$onModelStatsFinished"

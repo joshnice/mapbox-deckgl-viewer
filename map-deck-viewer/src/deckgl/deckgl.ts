@@ -5,6 +5,7 @@ import { GLTFLoader } from "@loaders.gl/gltf";
 import { Mapbox } from "../mapbox/mapbox";
 import type { DeckGlSubjects, Stats } from "../types/deckgl-types";
 import { Base3d } from "../base3d/base3d";
+import { firstValueFrom } from "rxjs";
 
 export class DeckGl extends Base3d {
 	private modelLayers: ScenegraphLayer[] = [];
@@ -15,7 +16,7 @@ export class DeckGl extends Base3d {
 
 	private readonly $onModelFailedToLoad: DeckGlSubjects["$onModelFailedToLoad"];
 
-	private readonly $renderingSceneFinshed: DeckGlSubjects["$renderingSceneFinshed"];
+	private readonly $renderingSceneFinished: DeckGlSubjects["$renderingSceneFinished"];
 
 	private readonly $onModelStatsFinished: DeckGlSubjects["$onModelStatsFinished"];
 
@@ -28,13 +29,13 @@ export class DeckGl extends Base3d {
 	constructor(options: { mapbox: Mapbox; subjects: DeckGlSubjects }) {
 		super(options);
 		this.$onModelFailedToLoad = options.subjects.$onModelFailedToLoad;
-		this.$renderingSceneFinshed = options.subjects.$renderingSceneFinshed;
+		this.$renderingSceneFinished = options.subjects.$renderingSceneFinished;
 		this.$onModelStatsFinished = options.subjects.$onModelStatsFinished;
 		this.events(options.subjects);
 	}
 
 	public override async addLayers(models: Record<string, File>) {
-		super.addLayers(models);
+		await super.addLayers(models);
 
 		this.singleModel = Object.keys(models).length === 1;
 
@@ -87,6 +88,7 @@ export class DeckGl extends Base3d {
 		});
 
 		this.mapbox.getMap().addControl(this.mapboxOverlay);
+		await firstValueFrom(this.$renderingSceneFinished);
 	}
 
 	public removeLayer() {
@@ -137,7 +139,7 @@ export class DeckGl extends Base3d {
 			getScene: (scenegraph) => {
 				const finishRenderingScene = performance.now();
 				const totalRenderingTimeSecs = (finishRenderingScene - this.startLoadingModel) / 1000;
-				this.$renderingSceneFinshed.next(totalRenderingTimeSecs);
+				this.$renderingSceneFinished.next(totalRenderingTimeSecs);
 				return scenegraph && scenegraph.scenes ? scenegraph.scenes[0] : scenegraph;
 			},
 			data,

@@ -2,11 +2,11 @@ import type { Subject, ReplaySubject } from "rxjs";
 
 export type DeckGlSubjects = {
 	$testing: Subject<boolean>;
-	$testingResult: Subject<number>;
+	$testingResult: Subject<{modelId: string, result: number}>;
 	$onLumaGlWarning: ReplaySubject<string>;
 	$onModelFailedToLoad: ReplaySubject<string>;
 	$onModelStatsFinished: ReplaySubject<Stats>;
-	$renderingSceneFinshed: ReplaySubject<number>;
+	$renderingSceneFinished: ReplaySubject<number>;
 };
 
 export interface Stats {
