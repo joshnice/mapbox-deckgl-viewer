@@ -72,7 +72,7 @@ export class MapModelViewer {
 	}
 
 	public async startValidtionTesting() {
-		this.validationResults = {};
+		// this.validationResults = {};
 		this.map3d?.validationTesting(this.models);
 	}
 
