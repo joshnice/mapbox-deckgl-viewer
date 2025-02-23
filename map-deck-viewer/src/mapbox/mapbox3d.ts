@@ -3,6 +3,8 @@ import { Base3d } from "../base3d/base3d";
 import type { ModelLayerSpecification } from "mapbox-gl";
 
 export class Mapbox3d extends Base3d {
+	private validationResults: Record<string, boolean> = {};
+
 	public override addLayers(models: Record<string, File>): Promise<void> {
 		super.addLayers(models);
 		const map = this.mapbox.getMap();
@@ -33,7 +35,7 @@ export class Mapbox3d extends Base3d {
 
 			const source: FeatureCollection = {
 				type: "FeatureCollection",
-				features: [{ type: "Feature", geometry: { coordinates, type: "Point" }, properties: {} }],
+				features: [{ type: "Feature", id: modelId, geometry: { coordinates, type: "Point" }, properties: {} }],
 			};
 
 			map.addSource(modelId, { type: "geojson", data: source });
@@ -90,18 +92,28 @@ export class Mapbox3d extends Base3d {
 		});
 	}
 
-	public override async validationTesting(models: Record<string, File>): Promise<void> {
+	public override async validationTesting(models: Record<string, File>): Promise<Record<string, boolean>> {
 		this.removeLayer();
+		this.validationResults = {};
 
 		const map = this.mapbox.getMap();
 
-		const source: FeatureCollection = {
-			type: "FeatureCollection",
-			features: [{ type: "Feature", geometry: { type: "Point", coordinates: [0, 0] }, properties: {} }],
-		};
-
 		for (const [modelId, file] of Object.entries(models)) {
+			let renderedSucessfully = false;
+
 			try {
+				const source: FeatureCollection = {
+					type: "FeatureCollection",
+					features: [
+						{
+							type: "Feature",
+							id: modelId,
+							geometry: { type: "Point", coordinates: [0, 0] },
+							properties: { id: modelId },
+						},
+					],
+				};
+
 				map.addSource(modelId, { type: "geojson", data: source });
 				map.addModel(modelId, URL.createObjectURL(file));
 				map.addLayer({
@@ -116,13 +128,16 @@ export class Mapbox3d extends Base3d {
 				await new Promise<void>((res) => {
 					map.once("idle", () => {
 						const features = map.queryRenderedFeatures();
-						console.log(features);
+						renderedSucessfully = features[0]?.properties?.id === modelId;
 						res();
 					});
 				});
 			} catch (err) {
 				console.error(err);
 			}
+
+			this.validationResults[file.name] = renderedSucessfully;
+
 			if (map.getLayer(modelId)) {
 				map.removeLayer(modelId);
 			}
@@ -130,5 +145,6 @@ export class Mapbox3d extends Base3d {
 				map.removeSource(modelId);
 			}
 		}
+		return this.validationResults;
 	}
 }

@@ -44,19 +44,6 @@ export class Mapbox {
 			interactive: false,
 		});
 		this.enableInteraction();
-
-		this.map.once("idle", () => {
-			this.map?.addSource("point", {
-				type: "geojson",
-				data: { type: "Feature", properties: {}, geometry: { coordinates: [0, 0], type: "Point" } },
-			});
-			this.map?.addLayer({ id: "point", type: "circle", source: "point" });
-		});
-
-		this.map.on("click", () => {
-			const f = this.map?.queryRenderedFeatures();
-			console.log("f", f);
-		});
 	}
 
 	public getMap() {

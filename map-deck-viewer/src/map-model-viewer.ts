@@ -6,7 +6,7 @@ import type { Stats } from "./types/deckgl-types";
 import { Mapbox3d } from "./mapbox/mapbox3d";
 import { DeckGl } from "./deckgl/deckgl";
 import type { Base3d } from "./base3d/base3d";
-import { createCSV } from "./utils/csv";
+import { createCSV, downloadBlob } from "./utils/csv";
 
 export class MapModelViewer {
 	private readonly mapbox: Mapbox;
@@ -19,7 +19,7 @@ export class MapModelViewer {
 
 	private results: Record<string, number> = {};
 
-	// private validationResults: Record<string, number> = {};
+	private validationResults: Record<string, boolean> = {};
 
 	constructor(options: MapDeckViewOptions) {
 		if (options.mapboxAccessKey == null) {
@@ -72,8 +72,12 @@ export class MapModelViewer {
 	}
 
 	public async startValidtionTesting() {
-		// this.validationResults = {};
-		this.map3d?.validationTesting(this.models);
+		const results = await this.map3d?.validationTesting(this.models);
+		if (results == null) {
+			throw new Error("Results for validation was null, something went wrong");
+		}
+		this.validationResults = results;
+		downloadBlob(JSON.stringify(this.validationResults), "validation-results", "json");
 	}
 
 	private async testSingleModel(modelAmount: number, modelId: string, modelFile: File) {

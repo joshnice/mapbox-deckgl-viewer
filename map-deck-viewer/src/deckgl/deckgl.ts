@@ -135,7 +135,7 @@ export class DeckGl extends Base3d {
 		}
 	}
 
-	public override validationTesting(): void {
+	public override validationTesting(): Promise<Record<string, boolean>> {
 		throw new Error("Method not implemented.");
 	}
 

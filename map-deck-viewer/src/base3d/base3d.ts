@@ -19,7 +19,7 @@ export abstract class Base3d {
 
 	public abstract removeLayer(): void;
 
-	public abstract validationTesting(models: Record<string, File>): void;
+	public abstract validationTesting(models: Record<string, File>): Promise<Record<string, boolean>>;
 
 	public changeModelAmount(id: string, amount: number) {
 		this.modelsAmount[id] = amount;
