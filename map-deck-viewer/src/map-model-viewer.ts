@@ -1,4 +1,5 @@
 import mapboxgl from "mapbox-gl";
+import type { FeatureCollection } from "geojson";
 import { ReplaySubject, Subject } from "rxjs";
 import { Mapbox } from "./mapbox/mapbox";
 import type { EngineType, MapDeckViewOptions, MapDeckViewerSubjects } from "./types/map-deck-viewer-types";
@@ -7,6 +8,7 @@ import { Mapbox3d } from "./mapbox/mapbox3d";
 import { DeckGl } from "./deckgl/deckgl";
 import type { Base3d } from "./base3d/base3d";
 import { createCSV, downloadBlob } from "./utils/csv";
+import { generateGridGeoJSON } from "./utils/generate-grid-points";
 
 export class MapModelViewer {
 	private readonly mapbox: Mapbox;
@@ -64,8 +66,12 @@ export class MapModelViewer {
 
 		this.results = {};
 
+		const rows = Math.round(Math.sqrt(modelAmount));
+		const cols = Math.round(Math.sqrt(modelAmount));
+
+		const features = generateGridGeoJSON({ rows, cols, spacing: 0.0001 })
 		for (const [modelId, modelFile] of Object.entries(this.models)) {
-			await this.testSingleModel(modelAmount, modelId, modelFile);
+			await this.testSingleModel(features, modelId, modelFile);
 		}
 
 		createCSV(Object.entries(this.results), ["model name", "avg fps"], "Model testing results");
@@ -80,10 +86,10 @@ export class MapModelViewer {
 		downloadBlob(JSON.stringify(this.validationResults), "validation-results", "json");
 	}
 
-	private async testSingleModel(modelAmount: number, modelId: string, modelFile: File) {
+	private async testSingleModel(features: FeatureCollection, modelId: string, modelFile: File) {
 		this.removeModel();
-		await this.map3d?.addLayers({ [modelId]: modelFile });
-		this.changeModelAmount(modelId, modelAmount);
+		this.mapbox.setSource(modelId, features);
+		this.mapbox.addLayer(modelId, modelFile);
 		this.mapbox.startTesting(modelId);
 		return new Promise<void>((resolve) => {
 			const sub = this.subjects.$testingResult.subscribe(({ result }) => {

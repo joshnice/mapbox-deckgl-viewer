@@ -1,5 +1,6 @@
-import { Map } from "mapbox-gl";
+import { Map, type ModelLayerSpecification } from "mapbox-gl";
 import { Subject } from "rxjs";
+import type { FeatureCollection } from "geojson";
 import { FpsCounter } from "../utils/fps";
 
 export class Mapbox {
@@ -83,6 +84,30 @@ export class Mapbox {
 
 	public setZoomLevel(zoomLevel: number) {
 		this.startPosition.zoom = zoomLevel;
+	}
+
+	public addLayer(layerId: string, model: File) {
+		this.map?.addModel(layerId, URL.createObjectURL(model));
+		
+		const modelLayer: ModelLayerSpecification = {
+			id: layerId,
+			type: "model",
+			layout: {
+				"model-id": layerId,
+			},
+			source: layerId,
+		};
+
+		this.map?.addLayer(modelLayer);
+	}
+
+	public setSource(sourceId: string, featureCollection: FeatureCollection) {
+		const source = this.map?.getSource(sourceId);
+		if (source && source.type === "geojson") {
+			source.setData(featureCollection);
+		} else {
+			this.map?.addSource(sourceId, { type: "geojson", data: featureCollection });
+		}
 	}
 
 	public resetPosition() {

@@ -56,10 +56,14 @@ export class Mapbox3d extends Base3d {
 	}
 
 	public override removeLayer(): void {
-		const map = this.mapbox.getMap();
 		Object.keys(this.modelsAmount).forEach((modelId) => {
-			map.removeLayer(modelId);
-			map.removeSource(modelId);
+			const map = this.mapbox.getMap();
+			if (map.getLayer(modelId)) {
+				map.removeLayer(modelId);
+			}
+			if (map.getSource(modelId)) {
+				map.removeSource(modelId);
+			}
 		});
 	}
 
