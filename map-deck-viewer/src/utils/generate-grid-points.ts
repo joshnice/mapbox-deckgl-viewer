@@ -3,6 +3,7 @@ import type { FeatureCollection, Feature } from "geojson";
 interface GridConfig {
   rows: number;
   cols: number;
+  layerId: string;
   spacing?: number;
 }
 
@@ -33,14 +34,7 @@ export function generateGridGeoJSON(config: GridConfig): FeatureCollection {
           coordinates: [x, y] // GeoJSON uses [longitude/x, latitude/y]
         },
         properties: {
-          row,
-          col,
-          gridIndex: row * cols + col,
-          isCenter,
-          spacing,
-          // Optional: include original grid dimensions
-          gridRows: rows,
-          gridCols: cols
+          layerId: config.layerId,
         }
       };
 
