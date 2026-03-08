@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { MapCompnent } from "./pages/map.tsx";
+import { MapComponent } from "./pages/map.tsx";
 import "./main.css";
 import "./font.css";
 
@@ -12,6 +12,6 @@ if (root == null) {
 
 ReactDOM.createRoot(root).render(
 	<React.StrictMode>
-		<MapCompnent />
+		<MapComponent />
 	</React.StrictMode>,
 );
