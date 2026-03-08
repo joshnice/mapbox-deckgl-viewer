@@ -1,5 +1,4 @@
 import type { Model } from "@joshnice/map-deck-viewer/src/types/model-type";
-import { useState } from "react";
 import "./settings.css";
 import { ModelsAmountComponent } from "./settings-model-amount";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -7,15 +6,19 @@ import { faGear } from "@fortawesome/free-solid-svg-icons";
 
 interface SettingsComponentProps {
 	models: Model[];
+	disabled: boolean;
+	isOpen: boolean;
+	onToggle: () => void;
 	onModelAmountChanged: (modelAmount: Pick<Model, "id" | "amount">) => void;
 }
 
 export function SettingsComponent({
 	models,
+	disabled,
+	isOpen,
+	onToggle,
 	onModelAmountChanged,
 }: SettingsComponentProps) {
-	const [isOpen, setIsOpen] = useState(false);
-
 	return (
 		<div className="settings">
 			<button
@@ -23,12 +26,12 @@ export function SettingsComponent({
 				type="button"
 				aria-label="Open settings"
 				aria-expanded={isOpen}
-				disabled={models?.length === 0}
-				onClick={() => setIsOpen((open) => !open)}
+				disabled={disabled}
+				onClick={onToggle}
 			>
 				<FontAwesomeIcon className="settings__icon" icon={faGear} />
 			</button>
-			{isOpen && (
+			{isOpen && !disabled && (
 				<section className="settings__panel" aria-label="Settings panel">
 					<h3 className="settings__title">Settings</h3>
 					<ModelsAmountComponent

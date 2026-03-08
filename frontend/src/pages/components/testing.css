@@ -1,4 +1,4 @@
-.settings {
+.testing {
 	position: relative;
 	width: 42px;
 	flex: 0 0 42px;
@@ -7,7 +7,7 @@
 	align-items: center;
 }
 
-.settings__button {
+.testing__button {
 	width: 42px;
 	height: 42px;
 	display: inline-flex;
@@ -23,31 +23,31 @@
 	transition: transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease;
 }
 
-.settings__button:hover {
+.testing__button:hover {
 	transform: translateY(-1px);
 	border-color: rgba(177, 218, 255, 0.85);
 	box-shadow: 0 14px 26px rgba(6, 34, 70, 0.45);
 }
 
-.settings__button:focus-visible {
+.testing__button:focus-visible {
 	outline: 2px solid #8cc5ff;
 	outline-offset: 2px;
 }
 
-.settings__button:disabled {
+.testing__button:disabled {
 	opacity: 0.45;
 	cursor: not-allowed;
 	transform: none;
 	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-.settings__icon {
-	width: 20px;
-	height: 20px;
+.testing__icon {
+	width: 18px;
+	height: 18px;
 	color: #ffffff;
 }
 
-.settings__panel {
+.testing__panel {
 	position: absolute;
 	top: 52px;
 	right: 0;
@@ -61,13 +61,13 @@
 	box-shadow: 0 16px 30px rgba(0, 0, 0, 0.32);
 }
 
-.settings__title {
+.testing__title {
 	margin: 0 0 8px;
 	font-size: 18px;
 	line-height: 1.2;
 }
 
-.settings__description {
+.testing__description {
 	margin: 0;
 	font-size: 14px;
 	line-height: 1.4;
