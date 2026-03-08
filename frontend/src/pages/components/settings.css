@@ -1,0 +1,41 @@
+.settings {
+	position: relative;
+	width: 42px;
+	flex: 0 0 42px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.settings__icon {
+	width: 20px;
+	height: 20px;
+	color: #ffffff;
+}
+
+.settings__panel {
+	position: absolute;
+	top: 52px;
+	right: 0;
+	z-index: 40;
+	width: min(320px, calc(100vw - 40px));
+	padding: 14px 16px;
+	border: 1px solid rgba(255, 255, 255, 0.4);
+	border-radius: 12px;
+	background: linear-gradient(140deg, rgba(18, 32, 47, 0.96), rgba(12, 18, 29, 0.9));
+	color: #f3f9ff;
+	box-shadow: 0 16px 30px rgba(0, 0, 0, 0.32);
+}
+
+.settings__title {
+	margin: 0 0 8px;
+	font-size: 18px;
+	line-height: 1.2;
+}
+
+.settings__description {
+	margin: 0;
+	font-size: 14px;
+	line-height: 1.4;
+	color: rgba(231, 242, 255, 0.9);
+}

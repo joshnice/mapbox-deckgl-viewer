@@ -3,7 +3,11 @@ export function createCSV(data: any[], headings: string[], fileName: string) {
 	downloadBlob(csvData, fileName, "csv");
 }
 
-export function downloadBlob(content: BlobPart, filename: string, fileType: string) {
+export function downloadBlob(
+	content: BlobPart,
+	filename: string,
+	fileType: string,
+) {
 	// Create a blob
 	var blob = new Blob([content], { type: "text/csv;charset=utf-8;" });
 	var url = URL.createObjectURL(blob);

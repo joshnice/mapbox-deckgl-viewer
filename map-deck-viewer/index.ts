@@ -1,4 +1,2 @@
-export * from "./src/map-model-viewer";
-export * from "./src/types/map-deck-viewer-types";
-export * from "./src/types/deckgl-types";
-
+export * from "./src/components/map-handler-component";
+export * from "./src/mapbox/map-handler";

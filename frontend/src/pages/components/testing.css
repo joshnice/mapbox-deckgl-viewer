@@ -1,0 +1,135 @@
+.testing {
+	position: relative;
+	width: 42px;
+	flex: 0 0 42px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.testing__icon {
+	width: 18px;
+	height: 18px;
+	color: #ffffff;
+}
+
+.testing__panel {
+	position: absolute;
+	top: 52px;
+	right: 0;
+	z-index: 40;
+	width: min(320px, calc(100vw - 40px));
+	padding: 14px 16px;
+	border: 1px solid rgba(255, 255, 255, 0.4);
+	border-radius: 12px;
+	background: linear-gradient(140deg, rgba(18, 32, 47, 0.96), rgba(12, 18, 29, 0.9));
+	color: #f3f9ff;
+	box-shadow: 0 16px 30px rgba(0, 0, 0, 0.32);
+}
+
+.testing__title {
+	margin: 0 0 8px;
+	font-size: 18px;
+	line-height: 1.2;
+}
+
+.testing__description {
+	margin: 0;
+	font-size: 14px;
+	line-height: 1.4;
+	color: rgba(231, 242, 255, 0.9);
+}
+
+.testing__modes {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+.testing__modes-title {
+	margin-bottom: 8px;
+	font-size: 13px;
+	font-weight: 700;
+	color: rgba(227, 239, 255, 0.94);
+}
+
+.testing__modes-list {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.testing__mode {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 10px;
+	border: 1px solid rgba(255, 255, 255, 0.22);
+	border-radius: 8px;
+	background: rgba(16, 30, 45, 0.45);
+}
+
+.testing__mode:has(.testing__mode-input:checked) {
+	border-color: rgba(169, 214, 255, 0.82);
+	background: rgba(40, 75, 108, 0.45);
+}
+
+.testing__mode-input {
+	margin: 0;
+}
+
+.testing__mode-label {
+	font-size: 13px;
+	font-weight: 600;
+	color: rgba(235, 245, 255, 0.95);
+}
+
+.testing__field {
+	margin-top: 10px;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.testing__field-label {
+	font-size: 13px;
+	font-weight: 700;
+	color: rgba(227, 239, 255, 0.94);
+}
+
+.testing__field-input {
+	width: 68px;
+}
+
+.testing__start-button {
+	margin-top: 12px;
+	width: 100%;
+	padding: 9px 12px;
+	border: 1px solid rgba(255, 255, 255, 0.45);
+	border-radius: 10px;
+	background: linear-gradient(140deg, rgba(42, 88, 133, 0.95), rgba(24, 58, 92, 0.9));
+	color: #f3f9ff;
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 1.2;
+	cursor: pointer;
+	transition: border-color 140ms ease, transform 140ms ease, box-shadow 140ms ease;
+}
+
+.testing__start-button:hover {
+	transform: translateY(-1px);
+	border-color: rgba(177, 218, 255, 0.9);
+	box-shadow: 0 12px 20px rgba(6, 34, 70, 0.4);
+}
+
+.testing__start-button:focus-visible {
+	outline: 2px solid #8cc5ff;
+	outline-offset: 2px;
+}
+
+.testing__start-button:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+	transform: none;
+	box-shadow: none;
+}

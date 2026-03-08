@@ -1,0 +1,46 @@
+.drop-hint {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 20;
+	width: min(520px, calc(100% - 32px));
+	padding: 14px 18px;
+	border-radius: 14px;
+	border: 1px solid rgba(255, 255, 255, 0.42);
+	background: linear-gradient(
+		135deg,
+		rgba(20, 35, 52, 0.9) 0%,
+		rgba(13, 20, 32, 0.82) 100%
+	);
+	backdrop-filter: blur(3px);
+	color: #f7fbff;
+	pointer-events: none;
+	box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+	transition:
+		transform 140ms ease,
+		box-shadow 140ms ease,
+		background-color 140ms ease;
+	text-align: center;
+}
+
+.map-container--dragging .drop-hint {
+	box-shadow: 0 16px 34px rgba(7, 37, 77, 0.45);
+}
+
+.drop-hint__title {
+	margin: 0 0 4px;
+	color: #ffffff;
+	font-size: 21px;
+	font-weight: 700;
+	line-height: 1.2;
+	text-align: center;
+}
+
+.drop-hint__subtitle {
+	margin: 0;
+	color: rgba(221, 235, 255, 0.85);
+	font-size: 14px;
+	line-height: 1.4;
+	text-align: center;
+}

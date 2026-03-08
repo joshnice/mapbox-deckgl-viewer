@@ -9,19 +9,20 @@
 		"preview": "vite preview"
 	},
 	"dependencies": {
-		"@joshnice/map-deck-viewer": "@joshnice/map-deck-viewer",
-		"react": "^18.2.0",
-		"react-dom": "^18.2.0",
-		"rxjs": "^7.8.1",
-		"uuid": "^9.0.1"
+		"@fortawesome/fontawesome-svg-core": "^7.2.0",
+		"@fortawesome/free-brands-svg-icons": "^7.2.0",
+		"@fortawesome/free-solid-svg-icons": "^7.2.0",
+		"@fortawesome/react-fontawesome": "^3.2.0",
+		"@joshnice/map-deck-viewer": "file:../map-deck-viewer",
+		"react": "^19.2.4",
+		"react-dom": "^19.2.4"
 	},
 	"devDependencies": {
-		"@types/react": "^18.2.66",
-		"@types/react-dom": "^18.2.22",
-		"@types/uuid": "^9.0.8",
-		"@vitejs/plugin-react-swc": "^3.5.0",
+		"@types/react": "^19.2.14",
+		"@types/react-dom": "^19.2.3",
+		"@vitejs/plugin-react-swc": "^4.2.3",
 		"typescript": "^5.2.2",
-		"vite": "6.1.1",
-		"vite-plugin-checker": "^0.8.0"
+		"vite": "^7.3.1",
+		"vite-plugin-checker": "^0.12.0"
 	}
 }

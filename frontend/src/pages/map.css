@@ -1,38 +1,16 @@
-.map-container {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    position: relative;
-}
+
 
 .map {
-    flex: 1 1;
-    position: relative;
+	flex: 1 1;
+	position: relative;
 }
-  
+
 .mapbox-map {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 100%;
-    width: 100%;
-}
-
-.github-button {
-    position: absolute;
-    right: 10px;
-    bottom: 10px;
-    background-color: transparent;
-    width: auto;
-    height: auto;
-    border: transparent;
-    cursor: pointer;
-    z-index: 10;
-}
-
-.github-logo {
-    cursor: pointer;
-    height: 50px;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 100%;
+	width: 100%;
 }

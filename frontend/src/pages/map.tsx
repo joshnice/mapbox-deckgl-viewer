@@ -1,114 +1,163 @@
+import {
+	MapHandlerComponent,
+	type MapHandlerForwardRefProps,
+} from "@joshnice/map-deck-viewer";
 import { useRef, useState } from "react";
-import { v4 as uuid } from "uuid";
-import { EngineType, MapModelViewer } from "@joshnice/map-deck-viewer";
-import { ModelInputComponent } from "../components/model-input";
-import { ModelSettingsComponent } from "../components/model-settings";
-import { WarningConsoleComponent } from "../components/warning-console";
-import githubLogo from "/github.png";
+import type { Model } from "@joshnice/map-deck-viewer/src/types/model-type";
+import { ModelDropZoneComponent } from "./components/model-dropzone";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "./map.css";
-import { useSubjectContext } from "../state/subject-context";
+import { MapButtonsComponent } from "./map-buttons";
+import { GithubLogo } from "./components/github-logo";
+import type {
+	TestResult,
+	TestResultSingleModel,
+} from "../types/test-result-type";
+import type { TestOptions } from "../types/test-options-type";
 
 const MAPBOX_ACCESS_TOKEN =
 	"pk.eyJ1Ijoiam9zaG5pY2U5OCIsImEiOiJjanlrMnYwd2IwOWMwM29vcnQ2aWIwamw2In0.RRsdQF3s2hQ6qK-7BH5cKg";
 
-export default function Map() {
-	const {
-		$testing,
-		$deckGlFailedToLoadModel,
-		$deckGlWarningLog,
-		$modelStatsFinished,
-		$renderingSceneFinished,
-		$testingResult,
-		$validationTesting,
-	} = useSubjectContext();
+export function MapComponent() {
+	const mapHandlerRef = useRef<MapHandlerForwardRefProps | null>(null);
+	const [models, setModels] = useState<Model[]>([]);
+	const [testingResults, setTestingResults] = useState<TestResult[]>([]);
+	const [testingInProgress, setTestingInProgress] = useState(false);
 
-	const viewer = useRef<MapModelViewer | null>(null);
-	const [showModelUpload, setShowModalUpload] = useState(true);
-	const [showStats, setShowStats] = useState(false);
-	const [models, setModels] = useState<Record<string, File>>({});
-	const [zoomLevel, setZoomLevel] = useState<number>(20);
-
-	const handleModelInput = async (models: File[], engine: EngineType) => {
-		const modelsState: Record<string, File> = {};
-		models.forEach((model) => {
-			modelsState[uuid()] = model;
-		});
-		viewer.current?.setEngine(engine);
-		await viewer.current?.addModels(modelsState);
-		setShowStats(engine === "deckgl" && models.length === 1);
-		setModels(modelsState);
-		setShowModalUpload(false);
+	const handleModelsAdded = (modelFiles: FileList) => {
+		for (const modelFile of modelFiles) {
+			const model = {
+				id: crypto.randomUUID(),
+				file: modelFile,
+				amount: 1,
+			};
+			mapHandlerRef.current?.addModel(model);
+			setModels((m) => [...m, model]);
+		}
+		mapHandlerRef.current?.updateModelPositions();
 	};
 
-	const handleTestingClicked = (singleModelTest: boolean, amount: number) => {
-		viewer.current?.startTesting(singleModelTest, amount);
+	const handleModelAmountChanged = (
+		modelAmount: Pick<Model, "id" | "amount">,
+	) => {
+		setModels((currentModels) =>
+			currentModels.map((model) =>
+				model.id === modelAmount.id
+					? {
+							...model,
+							amount: modelAmount.amount,
+						}
+					: model,
+			),
+		);
+		mapHandlerRef.current?.updateModelAmount(modelAmount);
 	};
 
-	const handleValidationTestingClicked = () => {
-		viewer.current?.startValidtionTesting();
-	};
+	const handleStartTesting = async (testOptions: TestOptions) => {
+		if (testingInProgress) {
+			return;
+		}
 
-	const handleResetModelClicked = () => {
-		viewer.current?.removeModel();
+		if (testOptions.type === "all-models-fps") {
+			const modelsSnapshot = models.map((model) => ({
+				id: model.id,
+				name: model.file.name,
+				amount: model.amount,
+			}));
 
-		$deckGlWarningLog.reset();
-		$deckGlFailedToLoadModel.reset();
+			setTestingInProgress(true);
+			try {
+				const result = await mapHandlerRef.current?.startTesting();
+				if (result == null) {
+					return;
+				}
+				setTestingResults((res) => [
+					...res,
+					{
+						id: crypto.randomUUID(),
+						type: "all-models-fps",
+						time: new Date(),
+						result,
+						models: modelsSnapshot,
+					},
+				]);
+			} finally {
+				setTestingInProgress(false);
+			}
+		}
 
-		setShowModalUpload(true);
-	};
+		if (testOptions.type === "single-model-fps") {
+			for (const model of models) {
+				await mapHandlerRef.current?.updateModelAmount({ ...model, amount: 0 });
+			}
 
-	const handleModelAmountChanged = (id: string, amount: number) => {
-		viewer.current?.changeModelAmount(id, amount);
-	};
+			let previouslyTestedModelId: string | null = null;
+			const results: TestResultSingleModel["models"] = [];
 
-	const handleGithubClick = () => {
-		window.open("https://github.com/joshnice/mapbox-deckgl-viewer", "_blank")?.focus();
-	};
+			for (const model of models) {
+				if (previouslyTestedModelId) {
+					const foundModel = models.find(
+						(m) => m.id === previouslyTestedModelId,
+					);
+					if (foundModel) {
+						await mapHandlerRef.current?.updateModelAmount({
+							...foundModel,
+							amount: 0,
+						});
+					}
+				}
+				await mapHandlerRef.current?.updateModelAmount({
+					...model,
+					amount: testOptions.amount,
+				});
+				const result = await mapHandlerRef.current?.startTesting();
+				if (result) {
+					results.push({
+						id: model.id,
+						name: model.file.name,
+						fps: result,
+					});
+				}
+				previouslyTestedModelId = model.id;
+			}
 
-	const handleZoomLevelChange = (zoomLevel: number) => {
-		setZoomLevel(zoomLevel);
-		viewer?.current?.setZoomLevel(zoomLevel);
-	};
-
-	const renderMap = (element: HTMLDivElement) => {
-		if (viewer.current == null) {
-			viewer.current = new MapModelViewer({
-				mapElement: element,
-				mapboxAccessKey: MAPBOX_ACCESS_TOKEN,
-				subjects: {
-					$testing: $testing,
-					$testingResult: $testingResult,
-					$onLumaGlWarning: $deckGlWarningLog,
-					$onModelFailedToLoad: $deckGlFailedToLoadModel,
-					$renderingSceneFinished: $renderingSceneFinished,
-					$onModelStatsFinished: $modelStatsFinished,
-					$validationTesting: $validationTesting,
+			setTestingResults((res) => [
+				...res,
+				{
+					id: crypto.randomUUID(),
+					type: "single-model-fps",
+					amount: testOptions.amount,
+					time: new Date(),
+					models: results,
 				},
-			});
+			]);
 		}
 	};
 
+	const handleClearTestingResults = () => {
+		setTestingResults([]);
+	};
+
 	return (
-		<div className="map-container">
-			<div ref={renderMap} className="map">
-				<button type="button" className="github-button">
-					<img className="github-logo" onClick={handleGithubClick} src={githubLogo} alt="github logo" />
-				</button>
-				{!showModelUpload && <WarningConsoleComponent />}
-			</div>
-			{showModelUpload && <ModelInputComponent onModelInput={handleModelInput} />}
-			<ModelSettingsComponent
-				showStats={showStats}
+		<ModelDropZoneComponent
+			hasModels={models.length > 0}
+			handleModelFileDropped={handleModelsAdded}
+		>
+			<MapButtonsComponent
+				testingResults={testingResults}
 				models={models}
-				zoomLevel={zoomLevel}
-				showOptions={!showModelUpload}
-				onAmountChange={handleModelAmountChanged}
-				onTestingClicked={handleTestingClicked}
-				onChangeModelClick={handleResetModelClicked}
-				onZoomLevelChange={handleZoomLevelChange}
-				onValidationTestingClicked={handleValidationTestingClicked}
+				testingInProgress={testingInProgress}
+				onModelAmountChanged={handleModelAmountChanged}
+				onStartTesting={handleStartTesting}
+				onClearResults={handleClearTestingResults}
 			/>
-		</div>
+
+			<GithubLogo />
+
+			<MapHandlerComponent
+				mapboxAccessKey={MAPBOX_ACCESS_TOKEN}
+				ref={mapHandlerRef}
+			/>
+		</ModelDropZoneComponent>
 	);
 }
