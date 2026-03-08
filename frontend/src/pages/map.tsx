@@ -8,6 +8,7 @@ import { ModelDropZoneComponent } from "./components/model-dropzone";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "./map.css";
 import { MapButtonsComponent } from "./map-buttons";
+import { GithubLogo } from "./components/github-logo";
 
 const MAPBOX_ACCESS_TOKEN =
 	"pk.eyJ1Ijoiam9zaG5pY2U5OCIsImEiOiJjanlrMnYwd2IwOWMwM29vcnQ2aWIwamw2In0.RRsdQF3s2hQ6qK-7BH5cKg";
@@ -54,6 +55,8 @@ export function MapComponent() {
 				models={models}
 				onModelAmountChanged={handleModelAmountChanged}
 			/>
+
+			<GithubLogo />
 
 			<MapHandlerComponent
 				mapboxAccessKey={MAPBOX_ACCESS_TOKEN}

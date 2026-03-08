@@ -13,7 +13,7 @@ export function DropHint({ isDraggingModel }: DropHintProps) {
 					: "Drag and drop model files onto the map"}
 			</p>
 			<p className="drop-hint__subtitle">
-				Supports `.glb` and compatible model formats.
+				Supports glb model format
 			</p>
 		</div>
 	);
