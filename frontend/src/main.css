@@ -1,6 +1,10 @@
 body {
     box-sizing: border-box;
     margin: 0px;
+    font-family: "Outfit", "Avenir Next", "Segoe UI", sans-serif;
+    text-rendering: geometricPrecision;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 h1, h2, h3, h4, h5, h6 {
