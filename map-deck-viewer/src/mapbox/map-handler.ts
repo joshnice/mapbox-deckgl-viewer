@@ -82,8 +82,6 @@ export class MapHandler {
 	}
 
 	public async startTesting() {
-		console.log("start testing");
-
 		this.disableInteraction();
 
 		const fpsCounter = new FpsCounter();

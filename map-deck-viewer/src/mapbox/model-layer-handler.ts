@@ -41,6 +41,7 @@ export class ModelLayerHandler {
 			type: "model",
 			layout: {
 				"model-id": this.id,
+				"model-allow-density-reduction": false,
 			},
 			source: this.id,
 		});

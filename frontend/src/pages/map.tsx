@@ -50,10 +50,15 @@ export function MapComponent() {
 	};
 
 	const handleStartTesting = async () => {
-		console.log("handleStartTesting", testingInProgress);
 		if (testingInProgress) {
 			return;
 		}
+
+		const modelsSnapshot = models.map((model) => ({
+			id: model.id,
+			name: model.file.name,
+			amount: model.amount,
+		}));
 
 		setTestingInProgress(true);
 		try {
@@ -63,11 +68,15 @@ export function MapComponent() {
 			}
 			setTestingResults((res) => [
 				...res,
-				{ id: crypto.randomUUID(), time: new Date(), result },
+				{ id: crypto.randomUUID(), time: new Date(), result, models: modelsSnapshot },
 			]);
 		} finally {
 			setTestingInProgress(false);
 		}
+	};
+
+	const handleClearTestingResults = () => {
+		setTestingResults([]);
 	};
 
 	return (
@@ -81,6 +90,7 @@ export function MapComponent() {
 				testingInProgress={testingInProgress}
 				onModelAmountChanged={handleModelAmountChanged}
 				onStartTesting={handleStartTesting}
+				onClearResults={handleClearTestingResults}
 			/>
 
 			<GithubLogo />

@@ -32,9 +32,6 @@ export function TestingComponent({
 			{isOpen && !disabled && (
 				<section className="testing__panel" aria-label="Testing panel">
 					<h3 className="testing__title">Testing</h3>
-					<p className="testing__description">
-						Testing controls and results will appear here.
-					</p>
 					<button
 						className="testing__start-button"
 						disabled={isTesting}
