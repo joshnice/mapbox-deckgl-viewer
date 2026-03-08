@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { Subject, ReplaySubject } from "rxjs";
+import { ReplaySubject, Subject } from "rxjs";
 
 interface ISubjectContext {
 	$testing: Subject<boolean>;
@@ -15,6 +15,8 @@ export const SubjectContextInitialValue = {
 	$validationTesting: new Subject<boolean>(),
 };
 
-export const SubjectContext = createContext<ISubjectContext>(SubjectContextInitialValue);
+export const SubjectContext = createContext<ISubjectContext>(
+	SubjectContextInitialValue,
+);
 
 export const useSubjectContext = () => useContext(SubjectContext);

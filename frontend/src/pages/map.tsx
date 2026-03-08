@@ -1,9 +1,8 @@
-/** biome-ignore-all lint/a11y/noStaticElementInteractions: <explanation> */
 import {
-	type MapHandlerForwardRefProps,
 	MapHandlerComponent,
+	type MapHandlerForwardRefProps,
 } from "@joshnice/map-deck-viewer";
-import { useRef, useState, type DragEvent } from "react";
+import { type DragEvent, useRef, useState } from "react";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "./map.css";
 import { DropHint } from "./components/drop-hint";
@@ -50,6 +49,7 @@ export function MapCompnent() {
 	};
 
 	return (
+		// biome-ignore lint/a11y/noStaticElementInteractions: Can replace with input layer
 		<div
 			className={`map-container${isDraggingModel ? " map-container--dragging" : ""}`}
 			onDragEnter={handleDragEnter}

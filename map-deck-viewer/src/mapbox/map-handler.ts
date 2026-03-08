@@ -1,11 +1,15 @@
-import mapboxgl, { Map as MapboxMap, type MapOptions, type StyleSpecification } from "mapbox-gl";
-import { generateGridGeoJSON } from "../utils/generate-grid-points";
-import type { Model } from "../types/model-type";
-import { ModelLayerHandler } from "./model-layer-handler";
-import { featureCollection } from "@turf/helpers";
 import { bbox } from "@turf/bbox";
 import { bboxPolygon } from "@turf/bbox-polygon";
 import booleanWithin from "@turf/boolean-within";
+import { featureCollection } from "@turf/helpers";
+import mapboxgl, {
+	Map as MapboxMap,
+	type MapOptions,
+	type StyleSpecification,
+} from "mapbox-gl";
+import type { Model } from "../types/model-type";
+import { generateGridGeoJSON } from "../utils/generate-grid-points";
+import { ModelLayerHandler } from "./model-layer-handler";
 
 const STARTING_MAP_POSTIION: Partial<MapOptions> = {
 	center: [0, 0],
@@ -17,7 +21,11 @@ const STARTING_MAP_POSTIION: Partial<MapOptions> = {
 const MAP_STYLE: StyleSpecification = {
 	version: 8,
 	layers: [
-		{ id: "background", type: "background", paint: { "background-color": "#cccccc" } },
+		{
+			id: "background",
+			type: "background",
+			paint: { "background-color": "#cccccc" },
+		},
 		{ id: "sky", type: "sky" },
 	],
 	sources: {},
@@ -46,24 +54,38 @@ export class MapHandler {
 	}
 
 	public updateModelPositions() {
-		const gridFeatures = generateGridGeoJSON(this.layers.map(({ id, amount }) => ({ layerId: id, amount })));
+		const gridFeatures = generateGridGeoJSON(
+			this.layers.map(({ id, amount }) => ({ layerId: id, amount })),
+		);
 
 		for (const layer of this.layers) {
-			const features = gridFeatures.features.filter((f) => f.properties.layerId === layer.id);
+			const features = gridFeatures.features.filter(
+				(f) => f.properties.layerId === layer.id,
+			);
 			layer.updateSource(featureCollection(features));
 		}
 
-		const currentBounds = this.map.getBounds()?.toArray().flat() as [number, number, number, number];
+		const currentBounds = this.map.getBounds()?.toArray().flat() as [
+			number,
+			number,
+			number,
+			number,
+		];
 		const boundsPolygon = bboxPolygon(currentBounds);
 
-		const canSeeAllFeatures = gridFeatures.features.every((f) => booleanWithin(f, boundsPolygon));
+		const canSeeAllFeatures = gridFeatures.features.every((f) =>
+			booleanWithin(f, boundsPolygon),
+		);
 
 		if (!canSeeAllFeatures) {
-			this.map.fitBounds(bbox(gridFeatures) as [number, number, number, number], {
-				duration: 500,
-				pitch: STARTING_MAP_POSTIION.pitch,
-				padding: 100,
-			});
+			this.map.fitBounds(
+				bbox(gridFeatures) as [number, number, number, number],
+				{
+					duration: 500,
+					pitch: STARTING_MAP_POSTIION.pitch,
+					padding: 100,
+				},
+			);
 		}
 	}
 

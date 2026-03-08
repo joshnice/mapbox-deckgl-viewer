@@ -1,6 +1,6 @@
-import type { Map as MapboxMap } from "mapbox-gl";
 import { featureCollection } from "@turf/helpers";
 import type { FeatureCollection, Point } from "geojson";
+import type { Map as MapboxMap } from "mapbox-gl";
 import type { Model } from "../types/model-type";
 
 export class ModelLayerHandler {

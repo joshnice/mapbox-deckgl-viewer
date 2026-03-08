@@ -16,8 +16,7 @@
 		"declarationDir": "./dist",
 		"moduleResolution": "Node",
 		"tsBuildInfoFile": null,
-		"lib": ["es2022", "dom", "dom.iterable"],
-		
+		"lib": ["es2022", "dom", "dom.iterable"]
 	},
 	"exclude": ["./dist/**/*"],
 	"include": ["src/**/*.ts"]

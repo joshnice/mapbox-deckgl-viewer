@@ -10,7 +10,7 @@
 		"./map-deck-viewer"
 	],
 	"devDependencies": {
-		"@biomejs/biome": "^2.4.6"
+		"@biomejs/biome": "2.4.6"
 	},
 	"license": "ISC"
 }

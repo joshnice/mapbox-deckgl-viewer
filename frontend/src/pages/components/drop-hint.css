@@ -8,12 +8,19 @@
 	padding: 14px 18px;
 	border-radius: 14px;
 	border: 1px solid rgba(255, 255, 255, 0.42);
-	background: linear-gradient(135deg, rgba(20, 35, 52, 0.9) 0%, rgba(13, 20, 32, 0.82) 100%);
+	background: linear-gradient(
+		135deg,
+		rgba(20, 35, 52, 0.9) 0%,
+		rgba(13, 20, 32, 0.82) 100%
+	);
 	backdrop-filter: blur(3px);
 	color: #f7fbff;
 	pointer-events: none;
 	box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
-	transition: transform 140ms ease, box-shadow 140ms ease, background-color 140ms ease;
+	transition:
+		transform 140ms ease,
+		box-shadow 140ms ease,
+		background-color 140ms ease;
 	text-align: center;
 }
 

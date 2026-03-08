@@ -1,5 +1,8 @@
-import type { ModelFeatureCollection, ModelFeature } from "../types/features-type";
 import { featureCollection, point } from "@turf/helpers";
+import type {
+	ModelFeature,
+	ModelFeatureCollection,
+} from "../types/features-type";
 
 interface GridConfig {
 	spacing?: number;
