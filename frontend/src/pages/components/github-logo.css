@@ -1,0 +1,12 @@
+.github-logo {
+	position: absolute;
+	right: 20px;
+	bottom: 20px;
+	z-index: 30;
+}
+
+.github-logo__icon {
+	width: 20px;
+	height: 20px;
+	color: #ffffff;
+}

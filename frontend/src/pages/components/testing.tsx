@@ -1,6 +1,7 @@
 import { faFlask } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./testing.css";
+import { IconActionButton } from "./icon-action-button";
 
 interface TestingProps {
 	disabled: boolean;
@@ -11,16 +12,15 @@ interface TestingProps {
 export function TestingComponent({ disabled, isOpen, onToggle }: TestingProps) {
 	return (
 		<div className="testing">
-			<button
+			<IconActionButton
+				ariaLabel="Open testing"
 				className="testing__button"
-				type="button"
-				aria-label="Open testing"
-				aria-expanded={isOpen}
 				disabled={disabled}
+				isExpanded={isOpen}
 				onClick={onToggle}
 			>
 				<FontAwesomeIcon className="testing__icon" icon={faFlask} />
-			</button>
+			</IconActionButton>
 			{isOpen && !disabled && (
 				<section className="testing__panel" aria-label="Testing panel">
 					<h3 className="testing__title">Testing</h3>

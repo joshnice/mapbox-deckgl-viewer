@@ -3,6 +3,7 @@ import "./settings.css";
 import { ModelsAmountComponent } from "./settings-model-amount";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGear } from "@fortawesome/free-solid-svg-icons";
+import { IconActionButton } from "./icon-action-button";
 
 interface SettingsComponentProps {
 	models: Model[];
@@ -21,16 +22,15 @@ export function SettingsComponent({
 }: SettingsComponentProps) {
 	return (
 		<div className="settings">
-			<button
+			<IconActionButton
+				ariaLabel="Open settings"
 				className="settings__button"
-				type="button"
-				aria-label="Open settings"
-				aria-expanded={isOpen}
 				disabled={disabled}
+				isExpanded={isOpen}
 				onClick={onToggle}
 			>
 				<FontAwesomeIcon className="settings__icon" icon={faGear} />
-			</button>
+			</IconActionButton>
 			{isOpen && !disabled && (
 				<section className="settings__panel" aria-label="Settings panel">
 					<h3 className="settings__title">Settings</h3>
