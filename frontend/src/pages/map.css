@@ -1,10 +1,4 @@
-.map-container {
-	width: 100vw;
-	height: 100vh;
-	display: flex;
-	position: relative;
-	overflow: hidden;
-}
+
 
 .map {
 	flex: 1 1;
@@ -19,26 +13,6 @@
 	right: 0;
 	height: 100%;
 	width: 100%;
-}
-
-.map-container::after {
-	content: "";
-	position: absolute;
-	inset: 0;
-	background: transparent;
-	border: 0px solid transparent;
-	box-sizing: border-box;
-	pointer-events: none;
-	transition:
-		background-color 120ms ease,
-		border-color 120ms ease,
-		border-width 120ms ease;
-}
-
-.map-container--dragging::after {
-	background: rgba(32, 130, 248, 0.12);
-	border-width: 4px;
-	border-color: rgba(32, 130, 248, 0.9);
 }
 
 .github-button {

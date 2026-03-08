@@ -1,5 +1,6 @@
 import { type DragEvent, type PropsWithChildren, useState } from "react";
 import { DropHint } from "./drop-hint";
+import "./model-dropzone.css";
 
 interface ModelDropZoneProps {
 	hasModels: boolean;
