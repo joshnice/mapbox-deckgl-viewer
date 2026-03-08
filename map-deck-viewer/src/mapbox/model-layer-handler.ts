@@ -8,12 +8,15 @@ export class ModelLayerHandler {
 
 	public amount: number;
 
+	private readonly modelFile: File;
+
 	constructor(
 		private readonly map: MapboxMap,
-		private readonly model: Model,
+		model: Model,
 	) {
 		this.id = model.id;
 		this.amount = model.amount;
+		this.modelFile = model.file;
 
 		// Add to map
 		this.addSource();
@@ -22,7 +25,7 @@ export class ModelLayerHandler {
 	}
 
 	private addModel() {
-		this.map.addModel(this.id, URL.createObjectURL(this.model.file));
+		this.map.addModel(this.id, URL.createObjectURL(this.modelFile));
 	}
 
 	private addSource() {
@@ -48,6 +51,10 @@ export class ModelLayerHandler {
 		if (source && source.type === "geojson") {
 			source.setData(features);
 		}
+	}
+
+	public updateAmount(amount: number) {
+		this.amount = amount;
 	}
 
 	public remove() {

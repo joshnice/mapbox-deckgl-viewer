@@ -10,6 +10,7 @@ export interface MapHandlerProps {
 export interface MapHandlerForwardRefProps {
 	addModel: (model: Model) => void;
 	updateModelPositions: () => void;
+	updateModelAmount: (modelAmount: Pick<Model, "id" | "amount">) => void;
 }
 
 export function MapHandlerComponent({ mapboxAccessKey, ref }: MapHandlerProps) {
@@ -21,6 +22,9 @@ export function MapHandlerComponent({ mapboxAccessKey, ref }: MapHandlerProps) {
 		},
 		updateModelPositions: () => {
 			mapHandlerInstance.current?.updateModelPositions();
+		},
+		updateModelAmount: (modelAmount) => {
+			mapHandlerInstance.current?.changeModelAmount(modelAmount);
 		},
 	}));
 

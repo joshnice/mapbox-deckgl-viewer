@@ -34,7 +34,7 @@ const MAP_STYLE: StyleSpecification = {
 export class MapHandler {
 	private map: MapboxMap;
 
-	private layers: ModelLayerHandler[] = [];
+	private modelLayers: ModelLayerHandler[] = [];
 
 	constructor(config: { container: HTMLDivElement; mapboxAccessKey: string }) {
 		mapboxgl.accessToken = config.mapboxAccessKey;
@@ -50,15 +50,15 @@ export class MapHandler {
 	}
 
 	public addModel(model: Model) {
-		this.layers.push(new ModelLayerHandler(this.map, model));
+		this.modelLayers.push(new ModelLayerHandler(this.map, model));
 	}
 
 	public updateModelPositions() {
 		const gridFeatures = generateGridGeoJSON(
-			this.layers.map(({ id, amount }) => ({ layerId: id, amount })),
+			this.modelLayers.map(({ id, amount }) => ({ layerId: id, amount })),
 		);
 
-		for (const layer of this.layers) {
+		for (const layer of this.modelLayers) {
 			const features = gridFeatures.features.filter(
 				(f) => f.properties.layerId === layer.id,
 			);
@@ -87,6 +87,15 @@ export class MapHandler {
 				},
 			);
 		}
+	}
+
+	public changeModelAmount(modelAmount: Pick<Model, "id" | "amount">) {
+		const layer = this.modelLayers.find((layer) => layer.id === modelAmount.id);
+		if (layer == null) {
+			throw new Error(`Layer with id '${modelAmount.id}' not found`);
+		}
+		layer.updateAmount(modelAmount.amount);
+		this.updateModelPositions();
 	}
 
 	private enableInteraction() {
