@@ -13,16 +13,13 @@
 		"@fortawesome/free-brands-svg-icons": "^7.2.0",
 		"@fortawesome/free-solid-svg-icons": "^7.2.0",
 		"@fortawesome/react-fontawesome": "^3.2.0",
-		"@joshnice/map-deck-viewer": "@joshnice/map-deck-viewer",
+		"@joshnice/map-deck-viewer": "file:../map-deck-viewer",
 		"react": "^19.2.4",
-		"react-dom": "^19.2.4",
-		"rxjs": "^7.8.1",
-		"uuid": "^9.0.1"
+		"react-dom": "^19.2.4"
 	},
 	"devDependencies": {
 		"@types/react": "^19.2.14",
 		"@types/react-dom": "^19.2.3",
-		"@types/uuid": "^9.0.8",
 		"@vitejs/plugin-react-swc": "^4.2.3",
 		"typescript": "^5.2.2",
 		"vite": "^7.3.1",
