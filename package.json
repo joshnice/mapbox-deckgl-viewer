@@ -5,9 +5,12 @@
 	"scripts": {
 		"dev": "npm run dev -w @joshnice/webdeckglb-site"
 	},
-	"workspaces": ["./frontend", "./map-deck-viewer"],
+	"workspaces": [
+		"./frontend",
+		"./map-deck-viewer"
+	],
 	"devDependencies": {
-		"@biomejs/biome": "1.8.3"
+		"@biomejs/biome": "^2.4.6"
 	},
 	"license": "ISC"
 }

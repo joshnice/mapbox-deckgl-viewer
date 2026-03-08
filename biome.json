@@ -5,11 +5,18 @@
 		"lineWidth": 120
 	},
 	"linter": {
-		"enabled": false
+		"enabled": true
 	},
 	"vcs": {
 		"enabled": true,
 		"clientKind": "git",
 		"useIgnoreFile": true
+	},
+	"assist": {
+		"actions": {
+			"source": {
+				"organizeImports": "on"
+			}
+		}
 	}
 }
