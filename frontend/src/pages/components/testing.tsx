@@ -6,6 +6,7 @@ import { IconActionButton } from "./icon-action-button";
 interface TestingProps {
 	disabled: boolean;
 	isOpen: boolean;
+	isTesting: boolean;
 	onStartTesting: () => void;
 	onToggle: () => void;
 }
@@ -13,6 +14,7 @@ interface TestingProps {
 export function TestingComponent({
 	disabled,
 	isOpen,
+	isTesting,
 	onStartTesting,
 	onToggle,
 }: TestingProps) {
@@ -35,10 +37,11 @@ export function TestingComponent({
 					</p>
 					<button
 						className="testing__start-button"
+						disabled={isTesting}
 						onClick={onStartTesting}
 						type="button"
 					>
-						Start Testing
+						{isTesting ? "Testing..." : "Start Testing"}
 					</button>
 				</section>
 			)}

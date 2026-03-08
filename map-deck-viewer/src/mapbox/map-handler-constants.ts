@@ -22,4 +22,4 @@ export const MAP_STYLE: StyleSpecification = {
 
 export const TESTING_STEP_DURATION = 1000;
 
-export const TESTING_BEARING_INCREMENT = 1000;
+export const TESTING_BEARING_INCREMENT = 30;

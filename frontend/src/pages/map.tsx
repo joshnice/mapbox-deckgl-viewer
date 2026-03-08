@@ -9,6 +9,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import "./map.css";
 import { MapButtonsComponent } from "./map-buttons";
 import { GithubLogo } from "./components/github-logo";
+import type { TestResult } from "../types/test-result";
 
 const MAPBOX_ACCESS_TOKEN =
 	"pk.eyJ1Ijoiam9zaG5pY2U5OCIsImEiOiJjanlrMnYwd2IwOWMwM29vcnQ2aWIwamw2In0.RRsdQF3s2hQ6qK-7BH5cKg";
@@ -16,6 +17,8 @@ const MAPBOX_ACCESS_TOKEN =
 export function MapComponent() {
 	const mapHandlerRef = useRef<MapHandlerForwardRefProps | null>(null);
 	const [models, setModels] = useState<Model[]>([]);
+	const [testingResults, setTestingResults] = useState<TestResult[]>([]);
+	const [testingInProgress, setTestingInProgress] = useState(false);
 
 	const handleModelsAdded = (modelFiles: FileList) => {
 		for (const modelFile of modelFiles) {
@@ -46,8 +49,25 @@ export function MapComponent() {
 		mapHandlerRef.current?.updateModelAmount(modelAmount);
 	};
 
-	const handleStartTesting = () => {
-		void mapHandlerRef.current?.startTesting();
+	const handleStartTesting = async () => {
+		console.log("handleStartTesting", testingInProgress);
+		if (testingInProgress) {
+			return;
+		}
+
+		setTestingInProgress(true);
+		try {
+			const result = await mapHandlerRef.current?.startTesting();
+			if (result == null) {
+				return;
+			}
+			setTestingResults((res) => [
+				...res,
+				{ id: crypto.randomUUID(), time: new Date(), result },
+			]);
+		} finally {
+			setTestingInProgress(false);
+		}
 	};
 
 	return (
@@ -56,7 +76,9 @@ export function MapComponent() {
 			handleModelFileDropped={handleModelsAdded}
 		>
 			<MapButtonsComponent
+				testingResults={testingResults}
 				models={models}
+				testingInProgress={testingInProgress}
 				onModelAmountChanged={handleModelAmountChanged}
 				onStartTesting={handleStartTesting}
 			/>

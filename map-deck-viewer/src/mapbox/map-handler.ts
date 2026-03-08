@@ -12,6 +12,7 @@ import {
 	TESTING_BEARING_INCREMENT,
 	TESTING_STEP_DURATION,
 } from "./map-handler-constants";
+import { FpsCounter } from "../utils/fps";
 
 export class MapHandler {
 	private map: MapboxMap;
@@ -81,7 +82,13 @@ export class MapHandler {
 	}
 
 	public async startTesting() {
+		console.log("start testing");
+
 		this.disableInteraction();
+
+		const fpsCounter = new FpsCounter();
+
+		fpsCounter.start();
 
 		for (
 			let bearing = TESTING_BEARING_INCREMENT;
@@ -91,7 +98,11 @@ export class MapHandler {
 			await this.moveCameraForTesting(bearing, TESTING_STEP_DURATION);
 		}
 
+		const averageFPS = fpsCounter.finish();
+
 		this.enableInteraction();
+
+		return averageFPS;
 	}
 
 	private async moveCameraForTesting(bearing: number, duration: number) {

@@ -65,3 +65,10 @@
 	outline: 2px solid #8cc5ff;
 	outline-offset: 2px;
 }
+
+.testing__start-button:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+	transform: none;
+	box-shadow: none;
+}
