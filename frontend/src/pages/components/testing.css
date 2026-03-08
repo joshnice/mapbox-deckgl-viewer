@@ -39,3 +39,29 @@
 	line-height: 1.4;
 	color: rgba(231, 242, 255, 0.9);
 }
+
+.testing__start-button {
+	margin-top: 12px;
+	width: 100%;
+	padding: 9px 12px;
+	border: 1px solid rgba(255, 255, 255, 0.45);
+	border-radius: 10px;
+	background: linear-gradient(140deg, rgba(42, 88, 133, 0.95), rgba(24, 58, 92, 0.9));
+	color: #f3f9ff;
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 1.2;
+	cursor: pointer;
+	transition: border-color 140ms ease, transform 140ms ease, box-shadow 140ms ease;
+}
+
+.testing__start-button:hover {
+	transform: translateY(-1px);
+	border-color: rgba(177, 218, 255, 0.9);
+	box-shadow: 0 12px 20px rgba(6, 34, 70, 0.4);
+}
+
+.testing__start-button:focus-visible {
+	outline: 2px solid #8cc5ff;
+	outline-offset: 2px;
+}

@@ -7,6 +7,7 @@ import "./map-buttons.css";
 interface MapButtonsProps {
 	models: Model[];
 	onModelAmountChanged: (modelAmount: Pick<Model, "id" | "amount">) => void;
+	onStartTesting: () => void;
 }
 
 type OpenMenu = "settings" | "testing" | null;
@@ -14,6 +15,7 @@ type OpenMenu = "settings" | "testing" | null;
 export function MapButtonsComponent({
 	models,
 	onModelAmountChanged,
+	onStartTesting,
 }: MapButtonsProps) {
 	const [openMenu, setOpenMenu] = useState<OpenMenu>(null);
 	const disabled = models.length === 0;
@@ -29,6 +31,7 @@ export function MapButtonsComponent({
 			<TestingComponent
 				disabled={disabled}
 				isOpen={openMenu === "testing"}
+				onStartTesting={onStartTesting}
 				onToggle={() =>
 					setOpenMenu((menu) => (menu === "testing" ? null : "testing"))
 				}

@@ -2,34 +2,16 @@ import { bbox } from "@turf/bbox";
 import { bboxPolygon } from "@turf/bbox-polygon";
 import booleanWithin from "@turf/boolean-within";
 import { featureCollection } from "@turf/helpers";
-import mapboxgl, {
-	Map as MapboxMap,
-	type MapOptions,
-	type StyleSpecification,
-} from "mapbox-gl";
+import mapboxgl, { Map as MapboxMap } from "mapbox-gl";
 import type { Model } from "../types/model-type";
 import { generateGridGeoJSON } from "../utils/generate-grid-points";
 import { ModelLayerHandler } from "./model-layer-handler";
-
-const STARTING_MAP_POSTIION: Partial<MapOptions> = {
-	center: [0, 0],
-	zoom: 20,
-	pitch: 60,
-	bearing: 0,
-};
-
-const MAP_STYLE: StyleSpecification = {
-	version: 8,
-	layers: [
-		{
-			id: "background",
-			type: "background",
-			paint: { "background-color": "#cccccc" },
-		},
-		{ id: "sky", type: "sky" },
-	],
-	sources: {},
-};
+import {
+	MAP_STYLE,
+	STARTING_MAP_POSTIION,
+	TESTING_BEARING_INCREMENT,
+	TESTING_STEP_DURATION,
+} from "./map-handler-constants";
 
 export class MapHandler {
 	private map: MapboxMap;
@@ -98,6 +80,29 @@ export class MapHandler {
 		this.updateModelPositions();
 	}
 
+	public async startTesting() {
+		this.disableInteraction();
+
+		for (
+			let bearing = TESTING_BEARING_INCREMENT;
+			bearing <= 360;
+			bearing += TESTING_BEARING_INCREMENT
+		) {
+			await this.moveCameraForTesting(bearing, TESTING_STEP_DURATION);
+		}
+
+		this.enableInteraction();
+	}
+
+	private async moveCameraForTesting(bearing: number, duration: number) {
+		return new Promise<void>((res) => {
+			setTimeout(() => {
+				res();
+			}, duration);
+			this.map.easeTo({ bearing, duration });
+		});
+	}
+
 	private enableInteraction() {
 		this.map?.dragPan.enable();
 		this.map?.dragRotate.enable();
@@ -105,10 +110,10 @@ export class MapHandler {
 		this.map?.keyboard.enable();
 	}
 
-	// private disableInteraction() {
-	//     this.map?.dragPan.disable();
-	//     this.map?.dragRotate.disable();
-	//     this.map?.scrollZoom.disable();
-	//     this.map?.keyboard.disable();
-	// }
+	private disableInteraction() {
+		this.map?.dragPan.disable();
+		this.map?.dragRotate.disable();
+		this.map?.scrollZoom.disable();
+		this.map?.keyboard.disable();
+	}
 }

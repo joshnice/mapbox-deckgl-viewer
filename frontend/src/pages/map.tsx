@@ -46,6 +46,10 @@ export function MapComponent() {
 		mapHandlerRef.current?.updateModelAmount(modelAmount);
 	};
 
+	const handleStartTesting = () => {
+		void mapHandlerRef.current?.startTesting();
+	};
+
 	return (
 		<ModelDropZoneComponent
 			hasModels={models.length > 0}
@@ -54,6 +58,7 @@ export function MapComponent() {
 			<MapButtonsComponent
 				models={models}
 				onModelAmountChanged={handleModelAmountChanged}
+				onStartTesting={handleStartTesting}
 			/>
 
 			<GithubLogo />

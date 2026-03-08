@@ -6,10 +6,16 @@ import { IconActionButton } from "./icon-action-button";
 interface TestingProps {
 	disabled: boolean;
 	isOpen: boolean;
+	onStartTesting: () => void;
 	onToggle: () => void;
 }
 
-export function TestingComponent({ disabled, isOpen, onToggle }: TestingProps) {
+export function TestingComponent({
+	disabled,
+	isOpen,
+	onStartTesting,
+	onToggle,
+}: TestingProps) {
 	return (
 		<div className="testing">
 			<IconActionButton
@@ -27,6 +33,13 @@ export function TestingComponent({ disabled, isOpen, onToggle }: TestingProps) {
 					<p className="testing__description">
 						Testing controls and results will appear here.
 					</p>
+					<button
+						className="testing__start-button"
+						onClick={onStartTesting}
+						type="button"
+					>
+						Start Testing
+					</button>
 				</section>
 			)}
 		</div>

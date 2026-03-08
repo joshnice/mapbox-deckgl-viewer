@@ -9,6 +9,7 @@ export interface MapHandlerProps {
 
 export interface MapHandlerForwardRefProps {
 	addModel: (model: Model) => void;
+	startTesting: () => Promise<void>;
 	updateModelPositions: () => void;
 	updateModelAmount: (modelAmount: Pick<Model, "id" | "amount">) => void;
 }
@@ -19,6 +20,9 @@ export function MapHandlerComponent({ mapboxAccessKey, ref }: MapHandlerProps) {
 	useImperativeHandle(ref, () => ({
 		addModel: (model) => {
 			mapHandlerInstance.current?.addModel(model);
+		},
+		startTesting: async () => {
+			await mapHandlerInstance.current?.startTesting();
 		},
 		updateModelPositions: () => {
 			mapHandlerInstance.current?.updateModelPositions();
