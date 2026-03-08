@@ -234,6 +234,9 @@
 }
 
 .results__list {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
 	line-height: 1.4;
 }
 
