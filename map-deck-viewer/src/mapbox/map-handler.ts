@@ -36,7 +36,7 @@ export class MapHandler {
 		this.modelLayers.push(new ModelLayerHandler(this.map, model));
 	}
 
-	public updateModelPositions() {
+	public async updateModelPositions() {
 		const gridFeatures = generateGridGeoJSON(
 			this.modelLayers.map(({ id, amount }) => ({ layerId: id, amount })),
 		);
@@ -48,37 +48,45 @@ export class MapHandler {
 			layer.updateSource(featureCollection(features));
 		}
 
-		const currentBounds = this.map.getBounds()?.toArray().flat() as [
-			number,
-			number,
-			number,
-			number,
-		];
-		const boundsPolygon = bboxPolygon(currentBounds);
+		await new Promise<void>((res) => {
+			const currentBounds = this.map.getBounds()?.toArray().flat() as [
+				number,
+				number,
+				number,
+				number,
+			];
+			const boundsPolygon = bboxPolygon(currentBounds);
 
-		const canSeeAllFeatures = gridFeatures.features.every((f) =>
-			booleanWithin(f, boundsPolygon),
-		);
-
-		if (!canSeeAllFeatures) {
-			this.map.fitBounds(
-				bbox(gridFeatures) as [number, number, number, number],
-				{
-					duration: 500,
-					pitch: STARTING_MAP_POSTIION.pitch,
-					padding: 100,
-				},
+			const canSeeAllFeatures = gridFeatures.features.every((f) =>
+				booleanWithin(f, boundsPolygon),
 			);
-		}
+
+			if (!canSeeAllFeatures) {
+				this.map.once("moveend", () => {
+					res();
+				});
+
+				this.map.fitBounds(
+					bbox(gridFeatures) as [number, number, number, number],
+					{
+						duration: 500,
+						pitch: STARTING_MAP_POSTIION.pitch,
+						padding: 100,
+					},
+				);
+			} else {
+				res();
+			}
+		});
 	}
 
-	public changeModelAmount(modelAmount: Pick<Model, "id" | "amount">) {
+	public async changeModelAmount(modelAmount: Pick<Model, "id" | "amount">) {
 		const layer = this.modelLayers.find((layer) => layer.id === modelAmount.id);
 		if (layer == null) {
 			throw new Error(`Layer with id '${modelAmount.id}' not found`);
 		}
 		layer.updateAmount(modelAmount.amount);
-		this.updateModelPositions();
+		await this.updateModelPositions();
 	}
 
 	public async startTesting() {

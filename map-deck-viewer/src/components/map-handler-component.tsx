@@ -10,8 +10,10 @@ export interface MapHandlerProps {
 export interface MapHandlerForwardRefProps {
 	addModel: (model: Model) => void;
 	startTesting: () => Promise<number>;
-	updateModelPositions: () => void;
-	updateModelAmount: (modelAmount: Pick<Model, "id" | "amount">) => void;
+	updateModelPositions: () => Promise<void>;
+	updateModelAmount: (
+		modelAmount: Pick<Model, "id" | "amount">,
+	) => Promise<void>;
 }
 
 export function MapHandlerComponent({ mapboxAccessKey, ref }: MapHandlerProps) {
@@ -30,11 +32,11 @@ export function MapHandlerComponent({ mapboxAccessKey, ref }: MapHandlerProps) {
 
 			return result;
 		},
-		updateModelPositions: () => {
-			mapHandlerInstance.current?.updateModelPositions();
+		updateModelPositions: async () => {
+			await mapHandlerInstance.current?.updateModelPositions();
 		},
-		updateModelAmount: (modelAmount) => {
-			mapHandlerInstance.current?.changeModelAmount(modelAmount);
+		updateModelAmount: async (modelAmount) => {
+			await mapHandlerInstance.current?.changeModelAmount(modelAmount);
 		},
 	}));
 
