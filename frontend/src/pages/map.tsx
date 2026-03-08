@@ -13,14 +13,12 @@ const MAPBOX_ACCESS_TOKEN =
 
 export function MapCompnent() {
 	const mapHandlerRef = useRef<MapHandlerForwardRefProps | null>(null);
-	const dragDepthRef = useRef(0);
 	const [isDraggingModel, setIsDraggingModel] = useState(false);
 	const [hasModels, setHasModels] = useState(false);
 
 	const handleModelInput = async (event: DragEvent<HTMLDivElement>) => {
 		event.preventDefault();
 		event.stopPropagation();
-		dragDepthRef.current = 0;
 		setIsDraggingModel(false);
 		const modelFiles = event.dataTransfer.files;
 		if (modelFiles.length > 0) {
@@ -43,16 +41,12 @@ export function MapCompnent() {
 
 	const handleDragEnter = (event: DragEvent<HTMLDivElement>) => {
 		event.preventDefault();
-		dragDepthRef.current += 1;
 		setIsDraggingModel(true);
 	};
 
 	const handleDragLeave = (event: DragEvent<HTMLDivElement>) => {
 		event.preventDefault();
-		dragDepthRef.current = Math.max(0, dragDepthRef.current - 1);
-		if (dragDepthRef.current === 0) {
-			setIsDraggingModel(false);
-		}
+		setIsDraggingModel(false);
 	};
 
 	return (
@@ -63,11 +57,11 @@ export function MapCompnent() {
 			onDragLeave={handleDragLeave}
 			onDrop={handleModelInput}
 		>
-      <MapHandlerComponent
-        mapboxAccessKey={MAPBOX_ACCESS_TOKEN}
-        ref={mapHandlerRef}
-      />
-      {!hasModels ? <DropHint isDraggingModel={isDraggingModel} /> : null}
-    </div>
-  );
+			<MapHandlerComponent
+				mapboxAccessKey={MAPBOX_ACCESS_TOKEN}
+				ref={mapHandlerRef}
+			/>
+			{!hasModels ? <DropHint isDraggingModel={isDraggingModel} /> : null}
+		</div>
+	);
 }
