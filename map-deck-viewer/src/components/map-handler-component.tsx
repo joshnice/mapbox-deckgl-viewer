@@ -3,37 +3,37 @@ import { MapHandler } from "../mapbox/map-handler";
 import type { Model } from "../types/model-type";
 
 export interface MapHandlerProps {
-  mapboxAccessKey: string;
-  ref: Ref<MapHandlerForwardRefProps> | null;
+	mapboxAccessKey: string;
+	ref: Ref<MapHandlerForwardRefProps> | null;
 }
 
 export interface MapHandlerForwardRefProps {
-  addModel: (model: Model) => void;
-  updateModelPositions: () => void;
+	addModel: (model: Model) => void;
+	updateModelPositions: () => void;
 }
 
 export function MapHandlerComponent({ mapboxAccessKey, ref }: MapHandlerProps) {
-  const mapHandlerInstance = useRef<MapHandler | null>(null);
+	const mapHandlerInstance = useRef<MapHandler | null>(null);
 
-  useImperativeHandle(ref, () => ({
-    addModel: (model) => {
-      mapHandlerInstance.current?.addModel(model);
-    },
-    updateModelPositions: () => {
-      mapHandlerInstance.current?.updateModelPositions();
-    },
-  }));
+	useImperativeHandle(ref, () => ({
+		addModel: (model) => {
+			mapHandlerInstance.current?.addModel(model);
+		},
+		updateModelPositions: () => {
+			mapHandlerInstance.current?.updateModelPositions();
+		},
+	}));
 
-  const onMapContainerRender = (container: HTMLDivElement) => {
-    if (mapHandlerInstance.current == null) {
-      mapHandlerInstance.current = new MapHandler({
-        container,
-        mapboxAccessKey,
-      });
-    }
-  };
+	const onMapContainerRender = (container: HTMLDivElement) => {
+		if (mapHandlerInstance.current == null) {
+			mapHandlerInstance.current = new MapHandler({
+				container,
+				mapboxAccessKey,
+			});
+		}
+	};
 
-  return (
-    <div style={{ height: "100%", width: "100%" }} ref={onMapContainerRender} />
-  );
+	return (
+		<div style={{ height: "100%", width: "100%" }} ref={onMapContainerRender} />
+	);
 }

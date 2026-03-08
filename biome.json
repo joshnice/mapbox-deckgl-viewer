@@ -1,22 +1,17 @@
 {
+	"$schema": "https://biomejs.dev/schemas/2.4.6/schema.json",
 	"formatter": {
+		"includes": [
+			"./map-deck-viewer/**",
+			"./frontend/**"
+		],
 		"enabled": true,
-		"indentStyle": "tab",
-		"lineWidth": 120
+		"indentStyle": "tab"
 	},
 	"linter": {
 		"enabled": true
 	},
-	"vcs": {
-		"enabled": true,
-		"clientKind": "git",
-		"useIgnoreFile": true
-	},
 	"assist": {
-		"actions": {
-			"source": {
-				"organizeImports": "on"
-			}
-		}
+		"enabled": true
 	}
 }
