@@ -1,14 +1,22 @@
-import {
-	faChartLine,
-	faCircleInfo,
-	faTrashCan,
-} from "@fortawesome/free-solid-svg-icons";
+import { faChartLine, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useMemo, useState } from "react";
 import "./results.css";
 import { IconActionButton } from "./icon-action-button";
-import { TestResult } from "../../types/test-result";
+import type { TestResult } from "../../types/test-result-type";
 import { DialogComponent } from "./dialog";
+import {
+	ResultAllModelsDetails,
+	ResultAllModelsItem,
+} from "./result-all-models";
+import {
+	ResultSingleModelDetails,
+	ResultSingleModelItem,
+} from "./result-single-model";
+import {
+	ResultRenderTimeDetails,
+	ResultRenderTimeItem,
+} from "./result-render-time";
 
 interface ResultsProps {
 	disabled: boolean;
@@ -26,6 +34,66 @@ function formatTimestamp(isoDate: string) {
 		month: "short",
 		year: "numeric",
 	});
+}
+
+function getTestTypeLabel(result: TestResult) {
+	if (result.type === "all-models-fps") {
+		return "All Models FPS";
+	}
+	if (result.type === "single-model-fps") {
+		return "Single Model FPS";
+	}
+	return "Render Time";
+}
+
+function renderResultItem(
+	result: TestResult,
+	runNumber: number,
+	timestamp: string,
+	onOpenDetails: () => void,
+) {
+	if (result.type === "all-models-fps") {
+		return (
+			<ResultAllModelsItem
+				onOpenDetails={onOpenDetails}
+				result={result}
+				runNumber={runNumber}
+				timestamp={timestamp}
+			/>
+		);
+	}
+
+	if (result.type === "single-model-fps") {
+		return (
+			<ResultSingleModelItem
+				onOpenDetails={onOpenDetails}
+				result={result}
+				runNumber={runNumber}
+				timestamp={timestamp}
+			/>
+		);
+	}
+
+	return (
+		<ResultRenderTimeItem
+			onOpenDetails={onOpenDetails}
+			result={result}
+			runNumber={runNumber}
+			timestamp={timestamp}
+		/>
+	);
+}
+
+function renderResultDetails(result: TestResult) {
+	if (result.type === "all-models-fps") {
+		return <ResultAllModelsDetails result={result} />;
+	}
+
+	if (result.type === "single-model-fps") {
+		return <ResultSingleModelDetails result={result} />;
+	}
+
+	return <ResultRenderTimeDetails result={result} />;
 }
 
 export function ResultsComponent({
@@ -94,37 +162,19 @@ export function ResultsComponent({
 					)}
 					{results.length > 0 && (
 						<div className="results__list">
-							{[...results].reverse().map((res, index) => (
-								<article className="results__item" key={res.id}>
-									<div className="results__item-head">
-										<div className="results__item-meta">
-											<p className="results__run">
-												Run #{results.length - index}
-											</p>
-											<p className="results__time">
-												{formatTimestamp(res.time.toISOString())}
-											</p>
-										</div>
-										<button
-											aria-label={`View details for run #${results.length - index}`}
-											className="results__info-button"
-											onClick={() => setSelectedResult(res)}
-											type="button"
-										>
-											<FontAwesomeIcon
-												className="results__info-icon"
-												icon={faCircleInfo}
-											/>
-										</button>
+							{[...results].reverse().map((result, index) => {
+								const runNumber = results.length - index;
+								return (
+									<div key={result.id}>
+										{renderResultItem(
+											result,
+											runNumber,
+											formatTimestamp(result.time.toISOString()),
+											() => setSelectedResult(result),
+										)}
 									</div>
-									<p className="results__fps">
-										<span className="results__label">Average FPS</span>
-										<span className="results__value">
-											{res.result.toFixed(2)}
-										</span>
-									</p>
-								</article>
-							))}
+								);
+							})}
 						</div>
 					)}
 				</section>
@@ -133,29 +183,12 @@ export function ResultsComponent({
 				isOpen={selectedResult != null}
 				onClose={handleCloseDialog}
 				title={
-					selectedResultRun == null
+					selectedResultRun == null || selectedResult == null
 						? "Run Details"
-						: `Run #${selectedResultRun} Model Configuration`
+						: `Run #${selectedResultRun} ${getTestTypeLabel(selectedResult)}`
 				}
 			>
-				{selectedResult != null && selectedResult.models.length > 0 && (
-					<ul className="results__models-list">
-						{selectedResult.models.map((model) => (
-							<li
-								className="results__models-item"
-								key={`${selectedResult.id}-${model.id}`}
-							>
-								<span className="results__models-name">{model.name}</span>
-								<span className="results__models-amount">{model.amount}</span>
-							</li>
-						))}
-					</ul>
-				)}
-				{selectedResult != null && selectedResult.models.length === 0 && (
-					<p className="results__models-empty">
-						No models were active for this run.
-					</p>
-				)}
+				{selectedResult != null && renderResultDetails(selectedResult)}
 			</DialogComponent>
 		</div>
 	);
