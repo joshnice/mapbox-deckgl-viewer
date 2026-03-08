@@ -62,7 +62,7 @@ export class MapHandler {
 			);
 
 			if (!canSeeAllFeatures) {
-				this.map.once("moveend", () => {
+				this.map.once("idle", () => {
 					res();
 				});
 

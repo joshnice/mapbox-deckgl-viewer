@@ -40,6 +40,67 @@
 	color: rgba(231, 242, 255, 0.9);
 }
 
+.testing__modes {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+.testing__modes-title {
+	margin-bottom: 8px;
+	font-size: 13px;
+	font-weight: 700;
+	color: rgba(227, 239, 255, 0.94);
+}
+
+.testing__modes-list {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.testing__mode {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 10px;
+	border: 1px solid rgba(255, 255, 255, 0.22);
+	border-radius: 8px;
+	background: rgba(16, 30, 45, 0.45);
+}
+
+.testing__mode:has(.testing__mode-input:checked) {
+	border-color: rgba(169, 214, 255, 0.82);
+	background: rgba(40, 75, 108, 0.45);
+}
+
+.testing__mode-input {
+	margin: 0;
+}
+
+.testing__mode-label {
+	font-size: 13px;
+	font-weight: 600;
+	color: rgba(235, 245, 255, 0.95);
+}
+
+.testing__field {
+	margin-top: 10px;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.testing__field-label {
+	font-size: 13px;
+	font-weight: 700;
+	color: rgba(227, 239, 255, 0.94);
+}
+
+.testing__field-input {
+	width: 68px;
+}
+
 .testing__start-button {
 	margin-top: 12px;
 	width: 100%;

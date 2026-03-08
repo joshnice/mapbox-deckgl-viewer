@@ -2,17 +2,17 @@ import type { Model } from "@joshnice/map-deck-viewer/src/types/model-type";
 import { useEffect, useState } from "react";
 import { ResultsComponent } from "./components/results";
 import { SettingsComponent } from "./components/settings";
-
-import type { TestResult } from "../types/test-result";
+import type { TestResult } from "../types/test-result-type";
 import { TestingComponent } from "./components/testing";
 import "./map-buttons.css";
+import type { TestOptions } from "../types/test-options-type";
 
 interface MapButtonsProps {
 	testingResults: TestResult[];
 	models: Model[];
 	testingInProgress: boolean;
 	onModelAmountChanged: (modelAmount: Pick<Model, "id" | "amount">) => void;
-	onStartTesting: () => void;
+	onStartTesting: (options: TestOptions) => void;
 	onClearResults: () => void;
 }
 

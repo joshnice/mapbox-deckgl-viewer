@@ -9,7 +9,11 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import "./map.css";
 import { MapButtonsComponent } from "./map-buttons";
 import { GithubLogo } from "./components/github-logo";
-import type { TestResult } from "../types/test-result";
+import type {
+	TestResult,
+	TestResultSingleModel,
+} from "../types/test-result-type";
+import type { TestOptions } from "../types/test-options-type";
 
 const MAPBOX_ACCESS_TOKEN =
 	"pk.eyJ1Ijoiam9zaG5pY2U5OCIsImEiOiJjanlrMnYwd2IwOWMwM29vcnQ2aWIwamw2In0.RRsdQF3s2hQ6qK-7BH5cKg";
@@ -49,29 +53,84 @@ export function MapComponent() {
 		mapHandlerRef.current?.updateModelAmount(modelAmount);
 	};
 
-	const handleStartTesting = async () => {
+	const handleStartTesting = async (testOptions: TestOptions) => {
 		if (testingInProgress) {
 			return;
 		}
 
-		const modelsSnapshot = models.map((model) => ({
-			id: model.id,
-			name: model.file.name,
-			amount: model.amount,
-		}));
+		if (testOptions.type === "all-models-fps") {
+			const modelsSnapshot = models.map((model) => ({
+				id: model.id,
+				name: model.file.name,
+				amount: model.amount,
+			}));
 
-		setTestingInProgress(true);
-		try {
-			const result = await mapHandlerRef.current?.startTesting();
-			if (result == null) {
-				return;
+			setTestingInProgress(true);
+			try {
+				const result = await mapHandlerRef.current?.startTesting();
+				if (result == null) {
+					return;
+				}
+				setTestingResults((res) => [
+					...res,
+					{
+						id: crypto.randomUUID(),
+						type: "all-models-fps",
+						time: new Date(),
+						result,
+						models: modelsSnapshot,
+					},
+				]);
+			} finally {
+				setTestingInProgress(false);
 			}
+		}
+
+		if (testOptions.type === "single-model-fps") {
+			for (const model of models) {
+				await mapHandlerRef.current?.updateModelAmount({ ...model, amount: 0 });
+			}
+
+			let previouslyTestedModelId: string | null = null;
+			const results: TestResultSingleModel["models"] = [];
+
+			for (const model of models) {
+				if (previouslyTestedModelId) {
+					const foundModel = models.find(
+						(m) => m.id === previouslyTestedModelId,
+					);
+					if (foundModel) {
+						await mapHandlerRef.current?.updateModelAmount({
+							...foundModel,
+							amount: 0,
+						});
+					}
+				}
+				await mapHandlerRef.current?.updateModelAmount({
+					...model,
+					amount: testOptions.amount,
+				});
+				const result = await mapHandlerRef.current?.startTesting();
+				if (result) {
+					results.push({
+						id: model.id,
+						name: model.file.name,
+						fps: result,
+					});
+				}
+				previouslyTestedModelId = model.id;
+			}
+
 			setTestingResults((res) => [
 				...res,
-				{ id: crypto.randomUUID(), time: new Date(), result, models: modelsSnapshot },
+				{
+					id: crypto.randomUUID(),
+					type: "single-model-fps",
+					amount: testOptions.amount,
+					time: new Date(),
+					models: results,
+				},
 			]);
-		} finally {
-			setTestingInProgress(false);
 		}
 	};
 

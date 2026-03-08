@@ -1,6 +1,6 @@
 # Todo
 
 [x] Amount of models
-[] Testing all models on plan with x amount of each model
-[] Testing single model with x amount
-[] Render stats
+[x] Testing all models on plan with x amount of each model
+[x] Testing mode - Testing single model with x amount
+[] Testing mode - How long it takes to render
