@@ -4,7 +4,7 @@
 		"skipLibCheck": true,
 		"target": "es2022",
 		"allowJs": true,
-		"jsx": "react",
+		"jsx": "react-jsx",
 		"moduleDetection": "force",
 		"isolatedModules": true,
 		"verbatimModuleSyntax": true,
@@ -19,5 +19,5 @@
 		"lib": ["es2022", "dom", "dom.iterable"]
 	},
 	"exclude": ["./dist/**/*"],
-	"include": ["src/**/*.ts"]
+	"include": ["index.ts", "src/**/*.ts", "src/**/*.tsx"]
 }

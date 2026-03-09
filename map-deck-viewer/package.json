@@ -7,8 +7,9 @@
 	"type": "module",
 	"main": "index.ts",
 	"scripts": {
-		"build": "tsc",
-		"dev": "tsc --watch"
+		"build": "tsc && vite build",
+		"dev": "vite build --watch",
+		"preview": "vite preview"
 	},
 	"dependencies": {
 		"@turf/bbox": "^7.3.4",
@@ -22,6 +23,8 @@
 	"devDependencies": {
 		"@types/react": "^19.2.14",
 		"@types/react-dom": "^19.2.3",
-		"typescript": "^5.2.2"
+		"@vitejs/plugin-react": "^5.1.0",
+		"typescript": "^5.2.2",
+		"vite": "^7.3.1"
 	}
 }

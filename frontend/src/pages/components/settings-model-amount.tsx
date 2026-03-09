@@ -1,4 +1,4 @@
-import type { Model } from "@joshnice/map-deck-viewer/src/types/model-type";
+import type { Model } from "@joshnice/map-deck-viewer";
 import "./settings-model-amount.css";
 import { NumberInputComponent } from "./number-input";
 
