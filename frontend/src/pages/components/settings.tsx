@@ -1,4 +1,4 @@
-import type { Model } from "@joshnice/map-deck-viewer/src/types/model-type";
+import type { Model } from "@joshnice/map-deck-viewer";
 import "./settings.css";
 import { ModelsAmountComponent } from "./settings-model-amount";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

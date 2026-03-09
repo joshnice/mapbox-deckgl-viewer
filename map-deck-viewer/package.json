@@ -5,9 +5,17 @@
 	"private": false,
 	"author": "joshnice",
 	"type": "module",
-	"main": "index.ts",
+	"main": "./dist/index.js",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		}
+	},
 	"scripts": {
-		"build": "tsc && vite build",
+		"build": "tsc --emitDeclarationOnly && vite build",
 		"dev": "vite build --watch",
 		"preview": "vite preview"
 	},
@@ -16,14 +24,15 @@
 		"@turf/bbox-polygon": "^7.3.4",
 		"@turf/boolean-within": "^7.3.4",
 		"@turf/helpers": "7.3.4",
-		"mapbox-gl": "^3.19.1",
+		"mapbox-gl": "^3.19.1"
+	},
+	"peerDependencies": {
 		"react": "^19.2.4",
 		"react-dom": "^19.2.4"
 	},
 	"devDependencies": {
 		"@types/react": "^19.2.14",
 		"@types/react-dom": "^19.2.3",
-		"@vitejs/plugin-react": "^5.1.0",
 		"typescript": "^5.2.2",
 		"vite": "^7.3.1"
 	}

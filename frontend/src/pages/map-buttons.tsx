@@ -1,4 +1,4 @@
-import type { Model } from "@joshnice/map-deck-viewer/src/types/model-type";
+import type { Model } from "@joshnice/map-deck-viewer";
 import { useEffect, useState } from "react";
 import { ResultsComponent } from "./components/results";
 import { SettingsComponent } from "./components/settings";

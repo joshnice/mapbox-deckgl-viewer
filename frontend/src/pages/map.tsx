@@ -1,9 +1,9 @@
 import {
 	MapHandlerComponent,
 	type MapHandlerForwardRefProps,
+	type Model,
 } from "@joshnice/map-deck-viewer";
 import { useRef, useState } from "react";
-import type { Model } from "@joshnice/map-deck-viewer/src/types/model-type";
 import { ModelDropZoneComponent } from "./components/model-dropzone";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "./map.css";

@@ -1,7 +1,5 @@
-import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 export default defineConfig({
-	plugins: [react()],
 	build: {
 		emptyOutDir: false,
 		lib: {
@@ -12,6 +10,8 @@ export default defineConfig({
 		rollupOptions: {
 			external: [
 				"react",
+				"react/jsx-runtime",
+				"react/jsx-dev-runtime",
 				"react-dom",
 				"mapbox-gl",
 				"@turf/bbox",
