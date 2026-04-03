@@ -10,6 +10,12 @@ export class ModelLayerHandler {
 
 	private readonly modelFile: File;
 
+	private readonly startTime: number;
+
+	public totalRenderingTime: number | null = null;
+
+	private readonly timeBetweenRenderChecksMs = 5;
+
 	constructor(
 		private readonly map: MapboxMap,
 		model: Model,
@@ -17,6 +23,9 @@ export class ModelLayerHandler {
 		this.id = model.id;
 		this.amount = model.amount;
 		this.modelFile = model.file;
+
+		this.startTime = performance.now();
+		this.checkForRenderedModel();
 
 		// Add to map
 		this.addSource();
@@ -45,6 +54,21 @@ export class ModelLayerHandler {
 			},
 			source: this.id,
 		});
+	}
+
+	private checkForRenderedModel() {
+		let intervalId: number;
+		intervalId = setInterval(() => {
+			const features = this.map.queryRenderedFeatures();
+			const foundLayerFeature = features.some(
+				(f) => (f.properties as { layerId: string }).layerId === this.id,
+			);
+			if (foundLayerFeature) {
+				this.totalRenderingTime = performance.now() - this.startTime;
+				console.log(this.totalRenderingTime);
+				clearInterval(intervalId);
+			}
+		}, this.timeBetweenRenderChecksMs);
 	}
 
 	public updateSource(features: FeatureCollection<Point>) {

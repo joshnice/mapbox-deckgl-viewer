@@ -41,7 +41,7 @@ export function generateGridGeoJSON(
 			const col = globalPointIndex % gridSize;
 			const x = col * spacing - xOffset;
 			const y = row * spacing - yOffset;
-			features.push(point([x, y], { layerId }));
+			features.push(point([x, y], { layerId, id: crypto.randomUUID() }));
 			globalPointIndex++;
 		}
 	}
