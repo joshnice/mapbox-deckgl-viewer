@@ -9,7 +9,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import "./map.css";
 import { MapButtonsComponent } from "./map-buttons";
 import { GithubLogo } from "./components/github-logo";
-import { FpsCounterComponent } from "./components/fps-counter";
+import { PerformanceStatsComponent } from "./components/performance-stats";
 import type {
 	TestResult,
 	TestResultSingleModel,
@@ -144,7 +144,7 @@ export function MapComponent() {
 			hasModels={models.length > 0}
 			handleModelFileDropped={handleModelsAdded}
 		>
-			<FpsCounterComponent />
+			<PerformanceStatsComponent />
 
 			<MapButtonsComponent
 				testingResults={testingResults}
