@@ -1,0 +1,15 @@
+.fps-counter {
+	position: fixed;
+	top: 20px;
+	left: 20px;
+	z-index: 50;
+	padding: 8px 10px;
+	border: 1px solid rgba(255, 255, 255, 0.34);
+	border-radius: 10px;
+	background: rgba(8, 20, 32, 0.8);
+	color: #e4f1ff;
+	font-size: 13px;
+	font-weight: 700;
+	line-height: 1;
+	pointer-events: none;
+}
