@@ -6,6 +6,7 @@
 	"scripts": {
 		"predev": "npm run build -w @joshnice/map-deck-viewer",
 		"dev": "vite",
+		"dev:standalone": "vite",
 		"prebuild": "npm run build -w @joshnice/map-deck-viewer",
 		"build": "tsc && vite build",
 		"preview": "vite preview"

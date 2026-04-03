@@ -1,0 +1,16 @@
+{
+  "name": "@joshnice/e2e",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "e2e": "playwright test",
+    "e2e:headed": "playwright test --headed",
+    "e2e:ui": "playwright test --headed",
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.59.1",
+    "@types/node": "^25.3.5"
+  }
+}
