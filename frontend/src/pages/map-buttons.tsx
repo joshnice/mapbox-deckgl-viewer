@@ -1,5 +1,6 @@
 import type { Model } from "@joshnice/map-deck-viewer";
 import { useEffect, useState } from "react";
+import { ModelRenderTimesComponent } from "./components/model-render-times";
 import { ResultsComponent } from "./components/results";
 import { SettingsComponent } from "./components/settings";
 import type { TestResult } from "../types/test-result-type";
@@ -13,10 +14,17 @@ interface MapButtonsProps {
 	testingInProgress: boolean;
 	onModelAmountChanged: (modelAmount: Pick<Model, "id" | "amount">) => void;
 	onStartTesting: (options: TestOptions) => void;
+	onGetModelRenderTimes: () => Promise<
+		{
+			id: string;
+			name: string;
+			renderTime: number | null;
+		}[]
+	>;
 	onClearResults: () => void;
 }
 
-type OpenMenu = "results" | "settings" | "testing" | null;
+type OpenMenu = "results" | "settings" | "testing" | "render-times" | null;
 
 export function MapButtonsComponent({
 	testingResults,
@@ -24,6 +32,7 @@ export function MapButtonsComponent({
 	models,
 	onModelAmountChanged,
 	onStartTesting,
+	onGetModelRenderTimes,
 	onClearResults,
 }: MapButtonsProps) {
 	const [openMenu, setOpenMenu] = useState<OpenMenu>(null);
@@ -53,6 +62,16 @@ export function MapButtonsComponent({
 				onStartTesting={onStartTesting}
 				onToggle={() =>
 					setOpenMenu((menu) => (menu === "testing" ? null : "testing"))
+				}
+			/>
+			<ModelRenderTimesComponent
+				disabled={disabled}
+				isOpen={openMenu === "render-times"}
+				onGetModelRenderTimes={onGetModelRenderTimes}
+				onToggle={() =>
+					setOpenMenu((menu) =>
+						menu === "render-times" ? null : "render-times",
+					)
 				}
 			/>
 

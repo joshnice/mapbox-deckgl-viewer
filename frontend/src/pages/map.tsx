@@ -139,6 +139,21 @@ export function MapComponent() {
 		setTestingResults([]);
 	};
 
+	const handleGetModelRenderTimes = async () => {
+		return Promise.all(
+			models.map(async (model) => {
+				const renderTime =
+					(await mapHandlerRef.current?.getModelRenderTime(model.id)) ?? null;
+
+				return {
+					id: model.id,
+					name: model.file.name,
+					renderTime,
+				};
+			}),
+		);
+	};
+
 	return (
 		<ModelDropZoneComponent
 			hasModels={models.length > 0}
@@ -152,6 +167,7 @@ export function MapComponent() {
 				testingInProgress={testingInProgress}
 				onModelAmountChanged={handleModelAmountChanged}
 				onStartTesting={handleStartTesting}
+				onGetModelRenderTimes={handleGetModelRenderTimes}
 				onClearResults={handleClearTestingResults}
 			/>
 

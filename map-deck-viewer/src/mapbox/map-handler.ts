@@ -36,6 +36,10 @@ export class MapHandler {
 		this.modelLayers.push(new ModelLayerHandler(this.map, model));
 	}
 
+	public getModel(modelId: string) {
+		return this.modelLayers.find((m) => m.id === modelId);
+	}
+
 	public async updateModelPositions() {
 		const gridFeatures = generateGridGeoJSON(
 			this.modelLayers.map(({ id, amount }) => ({ layerId: id, amount })),

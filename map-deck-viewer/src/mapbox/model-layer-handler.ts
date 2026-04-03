@@ -65,7 +65,6 @@ export class ModelLayerHandler {
 			);
 			if (foundLayerFeature) {
 				this.totalRenderingTime = performance.now() - this.startTime;
-				console.log(this.totalRenderingTime);
 				clearInterval(intervalId);
 			}
 		}, this.timeBetweenRenderChecksMs);
