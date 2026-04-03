@@ -14,6 +14,7 @@ export interface MapHandlerForwardRefProps {
 	updateModelAmount: (
 		modelAmount: Pick<Model, "id" | "amount">,
 	) => Promise<void>;
+	getModelRenderTime: (modelId: string) => Promise<number | null>;
 }
 
 export function MapHandlerComponent({ mapboxAccessKey, ref }: MapHandlerProps) {
@@ -38,7 +39,28 @@ export function MapHandlerComponent({ mapboxAccessKey, ref }: MapHandlerProps) {
 		updateModelAmount: async (modelAmount) => {
 			await mapHandlerInstance.current?.changeModelAmount(modelAmount);
 		},
-	}));
+		getModelRenderTime: async (modelId) => {
+			return new Promise((res) => {
+				const MAX_COUNT = 20;
+				let count = 0;
+
+				const intervalId = setInterval(() => {
+					const model = mapHandlerInstance.current?.getModel(modelId);
+					count++;
+
+					if (count >= MAX_COUNT) {
+						res(null);
+					}
+
+					if (model?.totalRenderingTime != null) {
+						res(model.totalRenderingTime);
+						clearInterval(intervalId);
+					}
+
+				}, 500)
+			});
+		}
+ 	}));
 
 	const onMapContainerRender = (container: HTMLDivElement) => {
 		if (mapHandlerInstance.current == null) {
