@@ -52,6 +52,9 @@ export class ModelLayerHandler {
 				"model-id": this.id,
 				"model-allow-density-reduction": false,
 			},
+			metadata: {
+				modelName: this.modelFile.name,
+			},
 			source: this.id,
 		});
 	}

@@ -13,6 +13,7 @@ import {
 	TESTING_STEP_DURATION,
 } from "./map-handler-constants";
 import { FpsCounter } from "../utils/fps";
+import { MapHandlerE2e } from "../testing/map-handler-e2e";
 
 export class MapHandler {
 	private map: MapboxMap;
@@ -28,6 +29,8 @@ export class MapHandler {
 			style: MAP_STYLE,
 			...STARTING_MAP_POSTIION,
 		});
+
+		new MapHandlerE2e(this.map);
 
 		this.enableInteraction();
 	}
