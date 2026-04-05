@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "e2e": "playwright test",
-    "e2e:headed": "playwright test --headed",
+    "e2e:headed": "playwright test --headed --workers=1",
     "e2e:ui": "playwright test --headed",
     "test": "playwright test"
   },

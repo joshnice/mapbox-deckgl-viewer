@@ -1,6 +1,6 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./playwright-test.js";
 
-test("loads the local web page", async ({ page }) => {
+test("Loads the webpage and shows the drop model prompt", async ({ page }) => {
 	await page.goto("/");
 	await expect(page).toHaveTitle(/Mapdeckglb/);
 	await expect(
