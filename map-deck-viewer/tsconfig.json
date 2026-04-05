@@ -14,8 +14,7 @@
 		"declaration": true,
 		"outDir": "./dist",
 		"declarationDir": "./dist",
-		"moduleResolution": "Node",
-		"tsBuildInfoFile": null,
+		"moduleResolution": "bundler",
 		"lib": ["es2022", "dom", "dom.iterable"]
 	},
 	"exclude": ["./dist/**/*"],
