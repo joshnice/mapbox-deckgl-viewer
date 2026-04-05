@@ -32,7 +32,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-*glb
 .env
 test-results/
 playwright-report/

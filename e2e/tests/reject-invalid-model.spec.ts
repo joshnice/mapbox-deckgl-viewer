@@ -10,6 +10,9 @@ test("Rejects non-glb files dropped onto the map", async ({ page }) => {
 		page.getByText("Drag and drop model files onto the map"),
 	).toBeVisible();
 	await expect(
+		page.getByText("Unsupported file type. Please drop a .glb file."),
+	).toBeVisible();
+	await expect(
 		page.getByRole("button", { name: "Open settings" }),
 	).toBeDisabled();
 });
