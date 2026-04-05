@@ -13,6 +13,12 @@ export function ModelDropZoneComponent({
 	children,
 }: PropsWithChildren<ModelDropZoneProps>) {
 	const [isDraggingModel, setIsDraggingModel] = useState(false);
+	const [unsupportedFileDropped, setUnsupportedFileDropped] = useState(false);
+
+	const isSupportedModelFile = (file: File) => {
+		const fileName = file.name.toLowerCase();
+		return fileName.endsWith(".glb") || file.type === "model/gltf-binary";
+	};
 
 	const handleDragOver = (event: DragEvent<HTMLDivElement>) => {
 		event.preventDefault();
@@ -35,7 +41,15 @@ export function ModelDropZoneComponent({
 		setIsDraggingModel(false);
 		const modelFiles = event.dataTransfer.files;
 		if (modelFiles.length > 0) {
-			handleModelFileDropped(modelFiles);
+			const supportedFiles = Array.from(modelFiles).filter(isSupportedModelFile);
+			setUnsupportedFileDropped(supportedFiles.length !== modelFiles.length);
+			if (supportedFiles.length > 0) {
+				const filteredModelFiles = new DataTransfer();
+				for (const file of supportedFiles) {
+					filteredModelFiles.items.add(file);
+				}
+				handleModelFileDropped(filteredModelFiles.files);
+			}
 		}
 	};
 
@@ -49,7 +63,12 @@ export function ModelDropZoneComponent({
 			onDrop={handleModelInput}
 		>
 			{children}
-			{!hasModels && <DropHint isDraggingModel={isDraggingModel} />}
+			{!hasModels && (
+				<DropHint
+					isDraggingModel={isDraggingModel}
+					unsupportedFileDropped={unsupportedFileDropped}
+				/>
+			)}
 		</div>
 	);
 }

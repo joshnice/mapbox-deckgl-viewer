@@ -44,3 +44,12 @@
 	line-height: 1.4;
 	text-align: center;
 }
+
+.drop-hint__error {
+	margin: 8px 0 0;
+	color: #ffb4b4;
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 1.4;
+	text-align: center;
+}
