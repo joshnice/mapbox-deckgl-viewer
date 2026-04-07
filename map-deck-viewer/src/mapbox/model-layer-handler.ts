@@ -60,15 +60,14 @@ export class ModelLayerHandler {
 	}
 
 	private checkForRenderedModel() {
-		let intervalId: number;
-		intervalId = setInterval(() => {
+		const intervalId = window.setInterval(() => {
 			const features = this.map.queryRenderedFeatures();
 			const foundLayerFeature = features.some(
 				(f) => (f.properties as { layerId: string }).layerId === this.id,
 			);
 			if (foundLayerFeature) {
 				this.totalRenderingTime = performance.now() - this.startTime;
-				clearInterval(intervalId);
+				window.clearInterval(intervalId);
 			}
 		}, this.timeBetweenRenderChecksMs);
 	}
