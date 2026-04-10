@@ -1,4 +1,4 @@
-import type { Model } from "@joshnice/map-deck-viewer";
+import type { GlbModel, Model } from "@joshnice/map-deck-viewer";
 import "./settings.css";
 import { ModelsAmountComponent } from "./settings-model-amount";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,7 +10,7 @@ interface SettingsComponentProps {
 	disabled: boolean;
 	isOpen: boolean;
 	onToggle: () => void;
-	onModelAmountChanged: (modelAmount: Pick<Model, "id" | "amount">) => void;
+	onModelAmountChanged: (modelAmount: Pick<GlbModel, "id" | "amount">) => void;
 }
 
 export function SettingsComponent({

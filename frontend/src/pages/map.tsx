@@ -1,6 +1,7 @@
 import {
 	MapHandlerComponent,
 	type MapHandlerForwardRefProps,
+	type GlbModel,
 	type Model,
 } from "@joshnice/map-deck-viewer";
 import { useRef, useState } from "react";
@@ -25,10 +26,46 @@ export function MapComponent() {
 	const [testingResults, setTestingResults] = useState<TestResult[]>([]);
 	const [testingInProgress, setTestingInProgress] = useState(false);
 
+	const getModelName = (model: Model) => {
+		if (model.type === "glb") {
+			return model.file.name;
+		}
+
+		return (
+			model.files.find((file) => file.name.toLowerCase() === "tileset.json")?.name ??
+			model.files[0]?.name ??
+			"3d-tiles-model"
+		);
+	};
+
 	const handleModelsAdded = (modelFiles: FileList) => {
-		for (const modelFile of modelFiles) {
+		const files = Array.from(modelFiles);
+		const tilesetFile =
+			files.find((file) => file.name.toLowerCase() === "tileset.json") ?? null;
+		const glbFileCount = files.filter((file) =>
+			file.name.toLowerCase().endsWith(".glb"),
+		).length;
+		const has3DTilesBundle = tilesetFile != null && glbFileCount > 0;
+
+		if (has3DTilesBundle && tilesetFile) {
 			const model = {
 				id: crypto.randomUUID(),
+				type: "3dtile" as const,
+				files,
+			};
+			mapHandlerRef.current?.addModel(model);
+			setModels((m) => [...m, model]);
+			mapHandlerRef.current?.updateModelPositions();
+			return;
+		}
+
+		for (const modelFile of files) {
+			if (!modelFile.name.toLowerCase().endsWith(".glb")) {
+				continue;
+			}
+			const model = {
+				id: crypto.randomUUID(),
+				type: "glb" as const,
 				file: modelFile,
 				amount: 1,
 			};
@@ -39,11 +76,11 @@ export function MapComponent() {
 	};
 
 	const handleModelAmountChanged = (
-		modelAmount: Pick<Model, "id" | "amount">,
+		modelAmount: Pick<GlbModel, "id" | "amount">,
 	) => {
 		setModels((currentModels) =>
 			currentModels.map((model) =>
-				model.id === modelAmount.id
+				model.id === modelAmount.id && model.type === "glb"
 					? {
 							...model,
 							amount: modelAmount.amount,
@@ -62,8 +99,8 @@ export function MapComponent() {
 		if (testOptions.type === "all-models-fps") {
 			const modelsSnapshot = models.map((model) => ({
 				id: model.id,
-				name: model.file.name,
-				amount: model.amount,
+				name: getModelName(model),
+				amount: model.type === "glb" ? model.amount : 1,
 			}));
 
 			setTestingInProgress(true);
@@ -88,16 +125,20 @@ export function MapComponent() {
 		}
 
 		if (testOptions.type === "single-model-fps") {
-			for (const model of models) {
+			const glbModels = models.filter(
+				(model): model is GlbModel => model.type === "glb",
+			);
+
+			for (const model of glbModels) {
 				await mapHandlerRef.current?.updateModelAmount({ ...model, amount: 0 });
 			}
 
 			let previouslyTestedModelId: string | null = null;
 			const results: TestResultSingleModel["models"] = [];
 
-			for (const model of models) {
+			for (const model of glbModels) {
 				if (previouslyTestedModelId) {
-					const foundModel = models.find(
+					const foundModel = glbModels.find(
 						(m) => m.id === previouslyTestedModelId,
 					);
 					if (foundModel) {
@@ -115,7 +156,7 @@ export function MapComponent() {
 				if (result) {
 					results.push({
 						id: model.id,
-						name: model.file.name,
+						name: getModelName(model),
 						fps: result,
 					});
 				}
@@ -147,7 +188,7 @@ export function MapComponent() {
 
 				return {
 					id: model.id,
-					name: model.file.name,
+					name: getModelName(model),
 					renderTime,
 				};
 			}),

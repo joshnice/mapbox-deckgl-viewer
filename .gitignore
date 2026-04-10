@@ -35,3 +35,10 @@ dist-ssr
 .env
 test-results/
 playwright-report/
+e2e/assets/3d-tiles/0composite0.glb
+e2e/assets/3d-tiles/0material26_0.glb
+e2e/assets/3d-tiles/0material26_00.glb
+e2e/assets/3d-tiles/0material26_01.glb
+e2e/assets/3d-tiles/0material26_02.glb
+e2e/assets/3d-tiles/0material26_03.glb
+e2e/assets/3d-tiles/tileset.json

@@ -1,6 +1,6 @@
 import { type Ref, useImperativeHandle, useRef } from "react";
 import { MapHandler } from "../mapbox/map-handler";
-import type { Model } from "../types/model-type";
+import type { GlbModel, Model } from "../types/model-type";
 
 export interface MapHandlerProps {
 	mapboxAccessKey: string;
@@ -12,7 +12,7 @@ export interface MapHandlerForwardRefProps {
 	startTesting: () => Promise<number>;
 	updateModelPositions: () => Promise<void>;
 	updateModelAmount: (
-		modelAmount: Pick<Model, "id" | "amount">,
+		modelAmount: Pick<GlbModel, "id" | "amount">,
 	) => Promise<void>;
 	getModelRenderTime: (modelId: string) => Promise<number | null>;
 }
@@ -56,11 +56,10 @@ export function MapHandlerComponent({ mapboxAccessKey, ref }: MapHandlerProps) {
 						res(model.totalRenderingTime);
 						clearInterval(intervalId);
 					}
-
-				}, 500)
+				}, 500);
 			});
-		}
- 	}));
+		},
+	}));
 
 	const onMapContainerRender = (container: HTMLDivElement) => {
 		if (mapHandlerInstance.current == null) {

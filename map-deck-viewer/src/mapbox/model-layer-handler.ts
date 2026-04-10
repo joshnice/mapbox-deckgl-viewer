@@ -1,7 +1,7 @@
 import { featureCollection } from "@turf/helpers";
 import type { FeatureCollection, Point } from "geojson";
 import type { Map as MapboxMap } from "mapbox-gl";
-import type { Model } from "../types/model-type";
+import type { GlbModel } from "../types/model-type";
 
 export class ModelLayerHandler {
 	public readonly id: string;
@@ -18,7 +18,7 @@ export class ModelLayerHandler {
 
 	constructor(
 		private readonly map: MapboxMap,
-		model: Model,
+		model: GlbModel,
 	) {
 		this.id = model.id;
 		this.amount = model.amount;
@@ -60,7 +60,8 @@ export class ModelLayerHandler {
 	}
 
 	private checkForRenderedModel() {
-		const intervalId = window.setInterval(() => {
+		let intervalId: NodeJS.Timeout;
+		intervalId = setInterval(() => {
 			const features = this.map.queryRenderedFeatures();
 			const foundLayerFeature = features.some(
 				(f) => (f.properties as { layerId: string }).layerId === this.id,
