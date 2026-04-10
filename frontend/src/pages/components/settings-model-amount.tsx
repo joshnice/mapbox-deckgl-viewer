@@ -1,17 +1,19 @@
-import type { Model } from "@joshnice/map-deck-viewer";
+import type { GlbModel, Model } from "@joshnice/map-deck-viewer";
 import "./settings-model-amount.css";
 import { NumberInputComponent } from "./number-input";
 
 interface ModelAmountProps {
 	models: Model[];
-	onModelAmountChanged: (modelAmount: Pick<Model, "id" | "amount">) => void;
+	onModelAmountChanged: (modelAmount: Pick<GlbModel, "id" | "amount">) => void;
 }
 
 export function ModelsAmountComponent({
 	models,
 	onModelAmountChanged,
 }: ModelAmountProps) {
-	const orderedModels = [...models].reverse();
+	const orderedModels = [...models]
+		.filter((model): model is GlbModel => model.type === "glb")
+		.reverse();
 
 	return (
 		<section className="model-amount" aria-label="Model amounts">

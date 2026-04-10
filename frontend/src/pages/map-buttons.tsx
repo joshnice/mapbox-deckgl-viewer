@@ -1,4 +1,4 @@
-import type { Model } from "@joshnice/map-deck-viewer";
+import type { GlbModel, Model } from "@joshnice/map-deck-viewer";
 import { useEffect, useState } from "react";
 import { ModelRenderTimesComponent } from "./components/model-render-times";
 import { ResultsComponent } from "./components/results";
@@ -12,7 +12,7 @@ interface MapButtonsProps {
 	testingResults: TestResult[];
 	models: Model[];
 	testingInProgress: boolean;
-	onModelAmountChanged: (modelAmount: Pick<Model, "id" | "amount">) => void;
+	onModelAmountChanged: (modelAmount: Pick<GlbModel, "id" | "amount">) => void;
 	onStartTesting: (options: TestOptions) => void;
 	onGetModelRenderTimes: () => Promise<
 		{

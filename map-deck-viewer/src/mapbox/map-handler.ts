@@ -3,7 +3,7 @@ import { bboxPolygon } from "@turf/bbox-polygon";
 import booleanWithin from "@turf/boolean-within";
 import { featureCollection } from "@turf/helpers";
 import mapboxgl, { Map as MapboxMap } from "mapbox-gl";
-import type { Model } from "../types/model-type";
+import type { GlbModel, Model } from "../types/model-type";
 import { generateGridGeoJSON } from "../utils/generate-grid-points";
 import { ModelLayerHandler } from "./model-layer-handler";
 import {
@@ -14,11 +14,15 @@ import {
 } from "./map-handler-constants";
 import { FpsCounter } from "../utils/fps";
 import { MapHandlerE2e } from "../testing/map-handler-e2e";
+import { Tile3DLayer } from "../deckgl/3d-tile-layer";
+import { DeckglMapboxOverlay } from "../deckgl/deckgl-mapbox-overlay";
 
 export class MapHandler {
 	private map: MapboxMap;
 
 	private modelLayers: ModelLayerHandler[] = [];
+
+	private readonly deckglMapboxOverlay: DeckglMapboxOverlay;
 
 	constructor(config: { container: HTMLDivElement; mapboxAccessKey: string }) {
 		mapboxgl.accessToken = config.mapboxAccessKey;
@@ -31,12 +35,28 @@ export class MapHandler {
 		});
 
 		new MapHandlerE2e(this.map);
+		this.deckglMapboxOverlay = new DeckglMapboxOverlay(this.map);
 
 		this.enableInteraction();
 	}
 
 	public addModel(model: Model) {
-		this.modelLayers.push(new ModelLayerHandler(this.map, model));
+		switch (model.type) {
+			case "glb":
+				this.modelLayers.push(new ModelLayerHandler(this.map, model));
+				break;
+			case "3dtile":
+				new Tile3DLayer(model, this.deckglMapboxOverlay, (pos) => {
+					this.map.setCenter([pos.lng, pos.lat]);
+				});
+				break;
+			default:
+				// @ts-expect-error
+				throw new Error(`${model.type} not supported`);
+		}
+
+		if (model.type === "glb") {
+		}
 	}
 
 	public getModel(modelId: string) {
@@ -87,7 +107,7 @@ export class MapHandler {
 		});
 	}
 
-	public async changeModelAmount(modelAmount: Pick<Model, "id" | "amount">) {
+	public async changeModelAmount(modelAmount: Pick<GlbModel, "id" | "amount">) {
 		const layer = this.modelLayers.find((layer) => layer.id === modelAmount.id);
 		if (layer == null) {
 			throw new Error(`Layer with id '${modelAmount.id}' not found`);
